@@ -154,8 +154,6 @@ html.zh .back .tr{display:inline;margin:0 0 0 4px;font-size:.85em}
 .bx .bxh{margin:16px 18px 0;font-size:21px}.bx .bxt{margin:12px 14px 0;width:auto}
 .bx .txt{padding:10px 18px 18px;min-height:96px;white-space:pre-wrap;overflow-wrap:anywhere}
 .bx .txt:empty::before{content:"Text";color:var(--faint)}
-.editing .bx .pic{cursor:pointer}.editing .bx .pic:hover{background:#eef3fb}
-.editing .bx .pic::after{content:"Click to choose a photo";position:absolute;inset:auto 0 0 0;background:rgba(19,41,75,.82);color:#fff;font-size:13px;padding:6px;text-align:center}
 .bx textarea{font:inherit;border:0;padding:16px 18px;min-height:120px;resize:vertical;outline-offset:-3px;width:100%;color:var(--ink)}
 .bx .x{position:absolute;top:8px;right:8px;z-index:2;min-width:36px;height:36px;border-radius:18px;border:0;background:rgba(255,255,255,.95);box-shadow:var(--sh);font:700 15px var(--sans);cursor:pointer;color:var(--ink);padding:0 10px}
 .bx .x:hover{background:#ffe3e0}
@@ -201,7 +199,6 @@ a.rnd:hover .pic,.rnd:hover .pic{transform:translateY(-3px);box-shadow:0 16px 36
 .rnd .more{margin-top:4px}
 .rnd textarea,.rnd .hin{width:100%;max-width:320px;margin:4px 0;text-align:center}
 .rnd textarea{border:1px solid #cfd5de;border-radius:8px;min-height:96px;padding:10px 12px}
-.editing .rnd .pic::after{content:"Choose photo";position:absolute;left:0;right:0;bottom:0;padding:10px 0 16px;background:rgba(19,41,75,.78);color:#fff;font-size:13px}
 .rnd .x{top:0;right:calc(50% - 125px)}
 .rndadd{width:min(100%,230px);aspect-ratio:1;border-radius:50%;min-height:0;justify-self:center}
 .nowbar{background:var(--yellowS);border-top:1px solid #f1e2a6;border-bottom:1px solid #f1e2a6}
@@ -232,6 +229,86 @@ html.zh .nowbar .tr{display:inline;margin-left:4px;font-size:.9em}
 .lbv{aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .lbv iframe{width:100%;height:100%;border:0;display:block}
 .lbx-close{position:absolute;top:-52px;right:0;width:44px;height:44px;border-radius:50%;border:0;background:#fff;font:700 22px var(--sans);cursor:pointer}
+/* editor + carousel */
+.car{padding:0}.car .track{display:flex;width:100%;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.car .track::-webkit-scrollbar{display:none}
+.car .slide{flex:0 0 100%;height:100%;scroll-snap-align:center;position:relative;cursor:pointer}
+.editing .car .slide{cursor:default}
+.car .slide img{width:100%;height:100%;object-fit:cover;display:block}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--navy);font:700 22px/1 var(--sans);cursor:pointer;box-shadow:var(--sh);z-index:2}
+.cprev{left:10px}.cnext{right:10px}
+.dots{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:6px;z-index:2}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6);box-shadow:0 0 0 1px rgba(0,0,0,.15)}.dots i.on{background:#fff}
+.rnd .pic .play{position:absolute;inset:0;margin:auto}
+.addtab{font:700 14px var(--sans);color:var(--blue);background:var(--yellowS);border:1px dashed var(--yellow);border-radius:8px;padding:0 12px;min-height:40px;cursor:pointer;margin-left:4px}
+.addtab.sm{min-height:36px;border-radius:999px}
+.pedit{background:#fffdf3;border:1px dashed #e6c45a;border-radius:14px;padding:16px;display:grid;gap:10px;margin-top:6px}
+.pedit.dk{background:rgba(255,255,255,.06);border-color:rgba(255,211,92,.5);color:#fff}.pedit.dk .hin{background:#fff;color:var(--ink)}
+.pedit label,.pedit .bl{display:grid;gap:4px;font:600 13.5px var(--sans);color:var(--soft)}.pedit.dk label{color:#d3dcec}
+.pedit .hin{width:100%;text-align:left;max-width:none;margin:0}
+.pedit textarea.hin{min-height:70px;border:1px solid #cfd5de;border-radius:8px;padding:9px 11px;font:inherit}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.prow{display:flex;flex-wrap:wrap;gap:8px}
+.mini{font:600 14px var(--sans);border:1px solid #cfd5de;background:#fff;border-radius:8px;padding:0 12px;min-height:38px;cursor:pointer;color:var(--ink)}
+.mini:hover{border-color:var(--blue);color:var(--blue)}.mini:disabled{opacity:.4;cursor:default}
+.danger{color:#b3261e!important}.danger:hover{border-color:#b3261e!important;background:#fff1f0}
+.rnd.ed{background:#fffdf3;border:1px dashed #e6c45a;border-radius:16px;padding:14px}
+.bctl{display:flex;gap:6px;align-self:stretch;justify-content:flex-end;margin-bottom:8px}
+.bctl button{width:36px;height:36px;border-radius:50%;border:1px solid #cfd5de;background:#fff;cursor:pointer;font:700 14px var(--sans)}
+.bctl button:disabled{opacity:.35;cursor:default}
+.mstrip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-6px 0 8px}
+.mth{position:relative;width:76px}.mth img{width:76px;height:56px;object-fit:cover;border-radius:8px;display:block}
+.mth .ytag{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.7);color:#fff;font-size:11px;border-radius:4px;padding:0 4px}
+.mbtn{display:flex;justify-content:space-between;margin-top:3px}.mbtn button{width:24px;height:24px;border-radius:6px;border:1px solid #cfd5de;background:#fff;font-size:11px;cursor:pointer;padding:0}
+.mbtn button:disabled{opacity:.35}
+.madd{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%;margin-bottom:6px}.madd .hin{flex:1 1 140px;min-width:0;max-width:none;margin:0;font-size:14px}
+.zhf{width:100%;max-width:320px;text-align:left;font-size:13.5px;color:var(--soft)}.zhf summary{cursor:pointer;padding:4px 0}
+.lnk{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;max-width:320px}.lnk .hin{margin:0;font-size:14px}
+select.hin{background:#fff}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.pillrow a{text-decoration:none;color:var(--soft);font-weight:600;font-size:14.5px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;min-height:38px;display:inline-flex;flex-direction:column;justify-content:center}
+.pillrow a.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.lbin{display:flex;align-items:center;gap:10px}
+.lbv{flex:1}.lbv.isimg{aspect-ratio:auto;background:transparent;box-shadow:none;display:grid;place-items:center}.lbv.isimg img{max-width:100%;max-height:80vh;border-radius:10px;display:block}
+.lbnav{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font:700 26px/1 var(--sans);cursor:pointer}
+.lbnav[hidden]{display:none}
+.lbx-close{z-index:2}
+footer i{font-style:italic}
+@media(max-width:600px){.lbnav{position:absolute;bottom:-58px}.lbprev{left:0}.lbnext{right:0}}
+.rnd.shp-rounded .pic{border-radius:22px}
+.rnd.shp-wide .pic{width:100%;aspect-ratio:16/9;border-radius:18px}
+.rnd.shp-tall .pic{width:min(100%,210px);aspect-ratio:3/4;border-radius:18px}
+@media(min-width:760px){.rnd.shp-wide{grid-column:span 2}}
+.rnd.shp-wide .txt{max-width:60ch}
+.shpsel{margin-right:auto;font:600 13px var(--sans);border:1px solid #cfd5de;border-radius:8px;padding:0 8px;min-height:36px;background:#fff;max-width:60%}
+.slide.doc{cursor:default;background:#fff}.slide.doc iframe{width:100%;height:100%;border:0;display:block}
+.openpdf{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.95);border-radius:999px;padding:4px 12px;font:600 13px var(--sans);text-decoration:none;box-shadow:var(--sh)}
+.docth{width:76px;height:56px;border-radius:8px;background:#eef3fb;display:grid;place-items:center;color:var(--blue);font:700 11px var(--sans)}.docth svg{width:22px;height:22px}
+.req{margin:6px 0 10px;display:grid;justify-items:center;gap:6px}.req .note{max-width:36ch;margin:0;font-size:12.5px}
+.tblock{grid-column:1/-1;max-width:760px;justify-self:center;width:100%;text-align:left}
+.tblock h3{font-size:24px;color:var(--navy);margin:0 0 8px}.tblock p{margin:0 0 10px;font-size:17px}
+.tblock .req{justify-items:start}
+.tblock.ed{background:#fffdf3;border:1px dashed #e6c45a;border-radius:16px;padding:14px;display:grid;gap:8px}
+.tblock.ed .hin{max-width:none;text-align:left}.tblock.ed textarea{min-height:120px;border:1px solid #cfd5de;border-radius:8px;padding:10px 12px;font:inherit}
+.bkind{margin-right:auto;font:700 13px var(--sans);color:var(--soft);align-self:center}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--soft);text-align:left;max-width:320px;margin:4px 0}.tblock .chk{max-width:none}
+.chk input{width:18px;height:18px;margin-top:2px;flex:none}
+.addrow{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;grid-column:1/-1}.addrow .rndadd{width:180px}
+.inbox{max-width:620px;display:grid;gap:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--sh)}
+.inbox label{display:grid;gap:6px;font-weight:600}.inbox .hin{max-width:none;text-align:left;margin:0;font:16px var(--sans)}
+.inbox textarea.hin{border:1px solid #cfd5de;border-radius:8px;padding:10px 12px;min-height:140px}
+.inbox fieldset{border:0;padding:0;margin:0}.inbox legend{font-weight:600;margin-bottom:6px}
+.roles{display:flex;gap:10px;flex-wrap:wrap}.role{display:flex!important;align-items:center;gap:8px;border:1px solid #cfd5de;border-radius:999px;padding:8px 16px;min-height:44px;cursor:pointer;font-weight:600}
+.role:has(input:checked){border-color:var(--blue);background:var(--sky);color:var(--blue)}
+html.zh .role .tr,html.zh .inbox label>.tr{display:inline;margin-left:4px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.inbox .btn{justify-self:start}
+.envtab{padding:8px 12px!important}.envtab .env{width:24px;height:24px;display:block}
+.envh{margin:0 0 10px}.envh .env{width:64px;height:64px;color:var(--blue);display:block}
+.uip{margin-top:10px}.uip summary{cursor:pointer;padding:4px 0;color:var(--ink,#13294b)}.uip summary b{color:#13294b}.uip[open] summary{margin-bottom:8px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}@media(max-width:760px){.three{grid-template-columns:1fr}}
+.wlist{display:grid;gap:12px;margin-top:12px}
 footer{background:#0d1b33;color:#c3cde0;font-size:14.5px;box-shadow:inset 0 3px 0 var(--yellow)}
 footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;padding-block:40px}
 footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}footer a{color:var(--yellow)}
@@ -241,7 +318,18 @@ footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}f
 .gate .logo{width:76px;height:76px;margin:0 auto;font-size:40px;border-radius:18px}
 .gate .rule{height:4px;width:80px;margin:18px auto;background:var(--yellow);border-radius:3px}
 .gate .lang{justify-content:center;margin-top:22px}
-@media (prefers-reduced-motion:no-preference){.gate .box{animation:up .5s ease-out}@keyframes up{from{transform:translateY(10px);opacity:0}}}
+@media (prefers-reduced-motion:no-preference){.gate .box{animation:up .5s ease-out}
+.gate .box{max-width:760px;width:100%;min-height:min(640px,86vh);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(18px,3.4vh,34px)}
+.gate .logo{width:clamp(96px,14vh,128px);height:clamp(96px,14vh,128px);margin:0}
+.gate .logo img{width:100%;height:100%;object-fit:contain}
+.gate .ghello{margin:0;color:var(--soft);font-size:clamp(18px,2.4vh,22px);letter-spacing:.04em}
+.gate .gtitle{margin:0;font-size:clamp(32px,min(6.2vh,9vw),60px);line-height:1.18}
+.gate .rule{margin:0}
+.gate .gtag{margin:0;justify-content:center;font-size:clamp(18px,2.6vh,22px);line-height:1.6}
+.gate .genter{margin:0;font-size:18px;padding:14px 34px;min-height:54px}
+.gate #gatebody{display:contents}
+.gatelang{position:fixed;top:14px;right:18px;z-index:2}
+.gatelang .langmenu{left:auto!important;right:0!important;transform:none!important}@keyframes up{from{transform:translateY(10px);opacity:0}}}
 @media(max-width:860px){.hero .wrap,.split,.with-photo{grid-template-columns:minmax(0,1fr)}.live{grid-template-columns:minmax(0,1fr)}.live .col{padding-left:0;border:0;padding-top:12px;border-top:1px solid rgba(255,255,255,.2)}.live .col:first-of-type{border:0;padding-top:0}}
 @media(max-width:600px){.media{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tabs a{padding:8px 10px;font-size:15px}.brand b{font-size:19px}.btns .btn{width:100%}}
 </style>
@@ -250,13 +338,12 @@ footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}f
 <body>
 
 <div class="gate" id="gate" hidden>
+  <div class="lang gatelang" data-langbox><button class="langbtn icon" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language" title="Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></button><div class="langmenu" role="menu" hidden><button role="menuitemradio" data-v="en" aria-checked="true">English</button><button role="menuitemradio" data-v="zh" aria-checked="false">English + 繁體中文 (Chinese Traditional)</button></div></div>
   <div class="box">
     <div class="logo" data-logo aria-hidden="true"></div>
-    <p style="margin:22px 0 6px;color:var(--soft);font-size:17px">Welcome! 歡迎！</p><h1 style="margin:0">You’re about to view <span class="hl">Teacher Angel’s</span> website<span class="tr">你即將進入 Teacher Angel 的網站</span></h1>
-    <div class="rule"></div>
-    <p class="tagline nolead" style="margin:0;justify-content:center">Wanlai English Hub: Where We Play, Learn, and Grow.<span class="tr">萬來英語中心：在這裡，我們一起玩、一起學、一起成長。</span></p>
-    <button class="btn" id="enter" style="margin:26px auto 0">Continue →<span class="tr">繼續</span></button>
-    <div class="lang" data-langbox><button class="langbtn" type="button" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Language<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:14px"><path d="M6 9l6 6 6-6"/></svg></button><div class="langmenu" role="menu" hidden><button role="menuitemradio" data-v="en" aria-checked="true">English</button><button role="menuitemradio" data-v="zh" aria-checked="false">English + 繁體中文 (Chinese Traditional)</button></div></div>
+    <div id="gatebody"></div>
+    <button class="btn genter" id="enter"></button>
+    
   </div>
 </div>
 
@@ -269,11 +356,7 @@ footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}f
 <nav class="sub" id="sub" aria-label="Section"></nav>
 <main id="main"></main>
 
-<footer><div class="wrap">
-  <div><b>Wanlai English Hub</b><i>Where We Play, Learn, and Grow.</i><span class="tr">在這裡，我們一起玩、一起學、一起成長。</span><br>with Teacher Angel</div>
-  <div><b>Visit us</b>No. 35, Wenxian St., Beidou Township,<br>Changhua County 521, Taiwan<span class="tr">彰化縣北斗鎮西德里文賢街35號</span></div>
-  <div><b>Contact</b>Phone 04-888-2119<span class="tr">電話 04-888-2119</span><br><a href="https://www.wles.chc.edu.tw/">Wanlai Elementary School website ↗</a><br><button class="editlink" id="editlink" type="button">Edit pages</button></div>
-</div></footer>
+<footer id="foot"></footer>
 
 <div class="editbar" id="editbar" hidden><div class="wrap">
   <p id="views" class="views" hidden></p>
@@ -284,8 +367,8 @@ footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}f
   <button class="btn alt" id="discard" type="button">Discard changes</button>
   <button class="btn" id="done" type="button">Done</button>
 </div></div>
-<input type="file" id="picker" accept="image/*" hidden>
-<div class="lightbox" id="lightbox" hidden><div class="lbin"><button class="lbx-close" type="button" aria-label="Close video">×</button><div class="lbv"></div></div></div>
+<input type="file" id="picker" accept="image/*" multiple hidden>
+<div class="lightbox" id="lightbox" hidden><div class="lbin"><button class="lbx-close" type="button" aria-label="Close">×</button><button class="lbnav lbprev" type="button" aria-label="Previous">‹</button><div class="lbv"></div><button class="lbnav lbnext" type="button" aria-label="Next">›</button></div></div>
 <form class="ghsetup" id="ghsetup" hidden>
   <h3>Set up publishing</h3>
   <p class="note">Do this once on your own computer. Your access key is saved only in this browser and is never shown to visitors.</p>
@@ -299,64 +382,33 @@ footer b{color:#fff;font:700 18px var(--serif);display:block;margin-bottom:6px}f
 <script type="application/json" id="boxdata">{}</script>
 <script>
 {
-/* ============ EDIT YOUR CONTENT HERE ============ */
-// Your logo: put the image file next to index.html and type its name, e.g. "logo.png". Leave "" for an empty spot.
+/* ============ BUILT-IN SETTINGS ============
+   Almost everything is edited on the website itself: click "Edit pages" at the bottom of any page.
+   Only these stay in the file. */
 const LOGO = "data:image/webp;base64,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";
-// Word of the Week: NEWEST FIRST. Older words show in Archives › Word of the Day.
 const WORDS = [
   {word:"permission", zh:"允許；許可", pos:"noun", sentence:"May I go to the restroom? — Yes, you may!", sentenceZh:"我可以去廁所嗎？— 可以！", week:"Nov 23–27, 2026"},
   {word:"excuse me", zh:"不好意思", pos:"phrase", sentence:"Excuse me, Teacher Angel. May I borrow a pencil?", sentenceZh:"不好意思，Teacher Angel，我可以借一支鉛筆嗎？", week:"Nov 16–20, 2026"},
   {word:"thirsty", zh:"口渴的", pos:"adjective", sentence:"I’m thirsty. Let’s get some water!", sentenceZh:"我口渴了，我們去喝水吧！", week:"Nov 9–13, 2026"}
 ];
-// Classroom highlight on the Overview.
-const HIGHLIGHT = {title:"Grade 5 · Phonics Fun 5", titleZh:"五年級 · Phonics Fun 5", date:"Wed, Nov 25, 2026",
-  text:"We read our new word family out loud, then played a quick team spelling race. Everyone tried their best!",
-  textZh:"我們大聲朗讀新的字族，接著進行小組拼字比賽。每個人都盡力了！"};
-// School facts. Check these each school year.
-const SCHOOL = {principal:"Chen Jing-ting", principalZh:"陳靜婷", students:408, teachers:33, classes:17,
-  source:"Figures from public records (2022); please check with the school office."};
 // PRIVATE VIEW COUNT (only you see it): make a free account at goatcounter.com, pick a code (e.g. "wanlai-english"),
 // type it below, and in GoatCounter's settings tick "Allow adding visitor counts on your website".
-// Your view count then shows in the blue bar when you click "Edit pages", and in your GoatCounter dashboard.
 const GOATCOUNTER = "";
-// Wanlai On Air episodes (newest first)
-const ONAIR = [
-  {week:"Week 3", title:"Asking for permission", titleZh:"請求允許", phrase:"May I go to the restroom?", zh:"我可以去廁所嗎？"},
-  {week:"Week 2", title:"Excuse me!", titleZh:"不好意思！", phrase:"Excuse me, Teacher Angel. May I borrow a pencil?", zh:"不好意思，Teacher Angel，我可以借一支鉛筆嗎？"}
-];
-// PHOTO on the Overview (classroom highlight card): a file next to index.html, e.g. "photos/today.jpg", or an https:// link.
-const P=()=>({type:"photo",src:"",caption:""});
-const MEDIA = { "overview":[ P() ] };
-// SUB-PAGE BOXES are edited right on the website: click "Edit pages" at the bottom of any page.
-/* ================================================= */
+/* ========================================== */
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const t=(en,zh)=>esc(en)+(zh?`<span class="tr">${esc(zh)}</span>`:"");
-const safe=u=>/^https:\/\//.test(u||"")?u:"";
-
-const SITE=[
- {id:"overview",name:"Overview",zh:"首頁"},
- {id:"teachers-profile",name:"Teacher’s Profile",zh:"教師介紹",intro:"Meet Teacher Angel — who I am and how I teach.",introZh:"認識 Teacher Angel — 我是誰，以及我如何教學。",subs:[
-   {id:"about-me",name:"About Me",zh:"關於我",d:"A little about Teacher Angel.",dz:"Teacher Angel 的簡介。"},
-   {id:"teaching-philosophy",name:"Teaching Philosophy",zh:"教學理念",d:"What I believe about teaching English.",dz:"我對英語教學的想法。"}]},
- {id:"english-hub",name:"English Hub",zh:"英語中心",intro:"Where English lives at Wanlai — in class, on stage, on air and beyond the classroom.",introZh:"萬來的英語天地 — 課堂、舞台、廣播，以及教室之外。",subs:[
-   {id:"classroom-english",name:"Classroom English",zh:"教室英語",d:"Everyday English we use in class.",dz:"課堂上每天使用的英語。"},
-   {id:"morning-assembly",name:"English Activities during Morning Assembly",zh:"晨會英語活動",d:"English moments shared with the whole school at morning assembly.",dz:"在晨會上與全校分享的英語時光。"},
-   {id:"english-announcements",name:"English Announcements",zh:"英語廣播",d:"Wanlai On Air and other English announcements around school.",dz:"萬來廣播和校園裡的英語宣布。"},
-   {id:"reading-corner",name:"English Reading Corner",zh:"英語閱讀角",d:"Books, stories and reading fun.",dz:"書籍、故事與閱讀樂趣。"},
-   {id:"practice-corner",name:"English Practice Corner",zh:"英語練習角",d:"Words, phonics and speaking practice — any time.",dz:"單字、自然發音和口說練習，隨時都能練。"},
-   {id:"english-club",name:"English Club",zh:"英語社團",d:"Our club class — songs, games, projects and lots of speaking.",dz:"我們的社團課 — 唱歌、遊戲、專題和大量口說練習。"},
-   {id:"school-tour",name:"School Tour",zh:"校園導覽",d:"Take an English tour around Wanlai Elementary.",dz:"用英語認識萬來國小校園。"},
-   {id:"sister-schools",name:"International Sister Schools",zh:"國際姊妹校",d:"Our friends and partner schools around the world.",dz:"我們在世界各地的朋友和姊妹校。"}]}
-];
-const find=id=>{for(const x of SITE){if(x.id===id)return{top:x};for(const s of x.subs||[])if(s.id===id)return{top:x,sub:s}}return{top:SITE[0]}};
-
+const tr=zh=>zh?`<span class="tr">${esc(zh)}</span>`:"";
+const t=(en,zh)=>esc(en)+tr(zh);
 const $=s=>document.querySelector(s);
 const main=$("#main");
-
-
-
-const wxCodes={0:["Clear sky","晴朗"],1:["Mostly clear","大致晴朗"],2:["Partly cloudy","多雲時晴"],3:["Cloudy","陰天"],45:["Foggy","有霧"],48:["Foggy","有霧"],51:["Light drizzle","毛毛雨"],53:["Drizzle","毛毛雨"],55:["Heavy drizzle","毛毛雨"],61:["Light rain","小雨"],63:["Rain","下雨"],65:["Heavy rain","大雨"],80:["Rain showers","陣雨"],81:["Rain showers","陣雨"],82:["Heavy showers","大陣雨"],95:["Thunderstorm","雷雨"],96:["Thunderstorm","雷雨"],99:["Thunderstorm","雷雨"]};
+const okSrc=s=>/^https:\/\//.test(s)||/^[\w][\w ./-]*$/.test(s)&&!s.includes("..");
+const ytId=s=>{const m=String(s||"").match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{6,})/);return m?m[1]:""};
+const imgOk=s=>/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(s||"")||okSrc(s||"");
+const idOk=s=>/^[\w-]{1,80}$/.test(s||"");
+const clone=o=>JSON.parse(JSON.stringify(o));
+const uid=()=>Math.random().toString(36).slice(2,7);
+const slug=s=>(String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,30)||"page")+"-"+uid();
+const nl=s=>esc(s).replace(/\n/g,"<br>");
 
 const _i=(d)=>`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const N='stroke="#13294b" stroke-width="3"',G='stroke="#d9a21b" stroke-width="3"',B='stroke="#1f4e9c" stroke-width="3"';
@@ -373,248 +425,415 @@ const TICON={
  "sister-schools":_i(`<circle cx="32" cy="32" r="22" ${N}/><path d="M10 32h44M32 10c7 7 9 14 9 22s-2 15-9 22c-7-7-9-14-9-22s2-15 9-22z" ${B}/><path d="M46 12l4-4M50 12h-4V8" ${G}/>`),
  def:_i(`<circle cx="32" cy="32" r="18" ${N}/><path d="M32 22v20M22 32h20" ${G}/>`)
 };
-const VIEW=[`View page →`,`查看頁面`];
-function overview(){
- const w=WORDS[0]||{},ep=ONAIR[0]||{};
- return `<section class="hero"><div class="wrap">
-  <div><h1>English with <em>Teacher Angel</em> at Wanlai Elementary<span class="tr">和 Teacher Angel 一起在萬來國小學英語。</span></h1>
-   <p class="lead">${t("We create engaging and meaningful English learning experiences that build students’ confidence, communication skills, and real-world connections.","我們打造有趣又有意義的英語學習經驗，建立學生的自信、溝通能力，以及與真實世界的連結。")}</p>
-   <p class="tagline nolead"><span>Wanlai English Hub: Where We Play, Learn, and Grow.<span class="tr">萬來英語中心：在這裡，我們一起玩、一起學、一起成長。</span></span></p>
-   <div class="btns"><a class="btn y" href="#about-me">${t("Meet Teacher Angel","認識 Teacher Angel")}</a><a class="btn y" href="#english-hub">${t("Explore the English Hub","探索英語中心")}</a></div></div>
- </div></section>
+const ICON={photo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>'};
+const ENV='<svg class="env" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg>';
+const PLAY='<span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5l12 7-12 7z" fill="currentColor"/></svg></span>';
+const BACK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+
+/* ---------- starting content (used until you publish your own) ---------- */
+const BX=(title,text)=>({title,text,media:[]});
+const PG=(id,name,zh,desc,descZh,blocks,children)=>({id,name,zh,desc,descZh,img:"",blocks:blocks||[BX("",""),BX("","")],children:children||[]});
+const DEFAULT={v:2,inboxAdded:true,uiAdded:true,
+ hero:{title:"English with *Teacher Angel* at Wanlai Elementary",titleZh:"和 Teacher Angel 一起在萬來國小學英語",
+  lead:"We create engaging and meaningful English learning experiences that build students’ confidence, communication skills, and real-world connections.",
+  leadZh:"我們打造有趣又有意義的英語學習經驗，建立學生的自信、溝通能力，以及與真實世界的連結。",
+  tagline:"Wanlai English Hub: Where We Play, Learn, and Grow.",taglineZh:"萬來英語中心：在這裡，我們一起玩、一起學、一起成長。",
+  b1:"Meet Teacher Angel",b1Zh:"認識 Teacher Angel",b1To:"about-me",b2:"Explore the English Hub",b2Zh:"探索英語中心",b2To:"english-hub"},
+ homeHead:{eyebrow:"This week",eyebrowZh:"本週",title:"What’s happening in Wanlai English Hub",titleZh:"萬來英語中心近況"},
+ ui:{
+  overview:["Overview","首頁"],back:["Back","返回"],viewPage:["View page →","查看頁面"],
+  gateHello:["Welcome!",""],gateTitle:["You’re about to view *Teacher Angel’s* website",""],gateTag:["Wanlai English Hub: Where We Play, Learn, and Grow.",""],gateBtn:["Continue →",""],
+  ourSchool:["Our school","我們的學校"],students:["students","學生"],teachers:["teachers","教師"],classes:["classes","班級"],grades:["grades","年級"],
+  visitUs:["Visit us","地址"],contact:["Contact","聯絡我們"],phone:["Phone","電話"],schoolSite:["Wanlai Elementary School website ↗","萬來國小網站"],
+  requestCopy:["Request a copy","申請檔案"],requestNote:["Copies are shared with Teacher Angel’s permission. Your request is sent by email.","需經 Teacher Angel 同意後分享。申請將以電子郵件寄出。"],
+  allWords:["All Words of the Week","所有每週單字"],thisWeek:["This week","本週"],
+  fName:["Name","姓名"],fEmail:["Email Address","電子郵件"],fEmailPh:["So Teacher Angel can reply",""],fIam:["I am a…","我是…"],fStudent:["Student","學生"],fParent:["Parent","家長"],fTeacher:["Teacher","老師"],fMessage:["Message","訊息"],fSend:["Send message","送出訊息"],fThanks:["Thank you! Your message was sent to Teacher Angel.","謝謝！訊息已送出。"],
+  siteTitle:["Wanlai English Hub",""]},
+ logo:"",heroImg:"",words:WORDS.map(w=>({...w})),
+ home:[
+  {label:"Word of the Week",title:"permission",text:"“May I go to the restroom? — Yes, you may!”",media:[],to:"practice-corner",more:"All words →"},
+  {label:"Classroom Highlight",title:"Grade 5 · Phonics Fun 5",text:"We read our new word family out loud, then played a quick team spelling race. Everyone tried their best!",media:[],to:"english-hub",more:"All highlights →"},
+  {label:"Spotlight",title:"",text:"",media:[],to:"english-hub",more:"See more →"}],
+ school:{name:"Wanlai Elementary School",nameZh:"彰化縣北斗鎮萬來國民小學",students:"408",teachers:"33",classes:"17",grades:"1–6",note:"Figures from public records (2022); please check with the school office."},
+ footer:{title:"Wanlai English Hub",tag:"Where We Play, Learn, and Grow.",by:"with Teacher Angel",address:"No. 35, Wenxian St., Beidou Township,\nChanghua County 521, Taiwan",addressZh:"彰化縣北斗鎮西德里文賢街35號",phone:"04-888-2119",link:"https://www.wles.chc.edu.tw/"},
+ pages:[
+  PG("teachers-profile","Teacher’s Profile","教師介紹","Meet Teacher Angel — who I am and how I teach.","認識 Teacher Angel — 我是誰，以及我如何教學。",[],[
+   PG("about-me","About Me","關於我","A little about Teacher Angel.","Teacher Angel 的簡介。"),
+   PG("teaching-philosophy","Teaching Philosophy","教學理念","What I believe about teaching English.","我對英語教學的想法。")]),
+  PG("english-hub","English Hub","英語中心","Where English lives at Wanlai — in class, on stage, on air and beyond the classroom.","萬來的英語天地 — 課堂、舞台、廣播，以及教室之外。",[],[
+   PG("classroom-english","Classroom English","教室英語","Everyday English we use in class.","課堂上每天使用的英語。",[BX("Greetings","Good morning, Teacher Angel! How are you today?"),BX("Asking for help","Excuse me. Can you help me, please?"),BX("Classroom instructions","Stand up. Sit down. Open your book, please.")]),
+   PG("morning-assembly","English Activities during Morning Assembly","晨會英語活動","English moments shared with the whole school at morning assembly.","在晨會上與全校分享的英語時光。",[BX("Song of the Month","Sing along with this month’s English song."),BX("Sentence of the Week","Learn one useful sentence with the whole school."),BX("Student performances","Our students share English on stage.")]),
+   PG("english-announcements","English Announcements","英語廣播","Wanlai On Air and other English announcements around school.","萬來廣播和校園裡的英語宣布。",[BX("Wanlai On Air","A 1-minute English broadcast every week at break time."),BX("Week 2: Excuse me!","“Excuse me, Teacher Angel. May I borrow a pencil?”"),BX("Week 3: Asking for permission","“May I go to the restroom?”")]),
+   PG("reading-corner","English Reading Corner","英語閱讀角","Books, stories and reading fun.","書籍、故事與閱讀樂趣。",[BX("Book of the Month","A picture book we are reading together."),BX("Story time","Listen, read along and talk about the story."),BX("Reading challenge","How many English books can you read this term?")]),
+   Object.assign(PG("practice-corner","English Practice Corner","英語練習角","Words, phonics and speaking practice — any time.","單字、自然發音和口說練習，隨時都能練。",[BX("Word of the Week","permission — “May I go to the restroom? Yes, you may!”"),BX("Phonics practice","Say the sounds, then read the words."),BX("Speaking games","Play, talk and practise with friends.")]),{words:true}),
+   PG("english-club","English Club","英語社團","Our club class — songs, games, projects and lots of speaking.","我們的社團課 — 唱歌、遊戲、專題和大量口說練習。",[BX("Songs & chants","We sing and move to learn new words."),BX("Games","Fun games that get everyone speaking."),BX("Projects","Make, create and present in English.")]),
+   PG("school-tour","School Tour","校園導覽","Take an English tour around Wanlai Elementary.","用英語認識萬來國小校園。",[BX("Our classrooms","This is where we learn every day."),BX("The library","Find a good book to read."),BX("The playground","Let’s play together at break time!")]),
+   PG("sister-schools","International Sister Schools","國際姊妹校","Our friends and partner schools around the world.","我們在世界各地的朋友和姊妹校。",[BX("Our sister schools","Meet our friends from around the world."),BX("Video exchanges","We share videos and say hello."),BX("Pen pals","Write letters and make new friends.")])]),
+  Object.assign(PG("inbox","Inbox","留言信箱","Send Teacher Angel a message. Students, parents and teachers are all welcome!","給 Teacher Angel 留言。歡迎學生、家長和老師！",[],[]),{type:"inbox"})
+ ]};
+
+/* ---------- load (and upgrade older saved content) ---------- */
+function oldMedia(b){const m=[];if(b&&b.img&&imgOk(b.img))m.push({t:"img",src:b.img});const v=ytId(b&&b.video);if(v)m.push({t:"yt",id:v});return m}
+function eachPage(list,fn,parent=null){(list||[]).forEach(p=>{fn(p,parent);eachPage(p.children,fn,p)})}
+function fillNew(o){
+ for(const k of Object.keys(DEFAULT))if(o[k]===undefined)o[k]=clone(DEFAULT[k]);
+ o.ui=Object.assign(clone(DEFAULT.ui),o.ui||{});
+ for(const k of ["hero","homeHead","school","footer"])o[k]=Object.assign(clone(DEFAULT[k]),o[k]||{});
+ if(!o.uiAdded){o.uiAdded=true;eachPage(o.pages,p=>{if(p.id==="practice-corner")p.words=true})}
+ return o}
+function migrate(o){
+ if(o&&o.v===2&&Array.isArray(o.pages)){if(!o.inboxAdded){o.inboxAdded=true;if(!o.pages.some(p=>p.type==="inbox"))o.pages.push(clone(DEFAULT.pages.find(p=>p.type==="inbox")))}return fillNew(o)}
+ const d=clone(DEFAULT);
+ if(o&&typeof o==="object"){
+  eachPage(d.pages,p=>{if(Array.isArray(o[p.id]))p.blocks=o[p.id].map(b=>({title:b.title||"",text:b.text||"",media:oldMedia(b)}))});
+  if(Array.isArray(o.home))o.home.forEach((h,i)=>{if(d.home[i])Object.assign(d.home[i],{label:h.label??d.home[i].label,title:h.title??d.home[i].title,text:h.text??d.home[i].text,media:oldMedia(h)})});
+ }
+return fillNew(d)}
+const readBaked=()=>{try{return JSON.parse($("#boxdata").textContent||"{}")||{}}catch(e){return {}}};
+let DATA=migrate(readBaked());
+try{const dr=JSON.parse(localStorage.getItem("weh-boxes")||"null");if(dr&&typeof dr==="object")DATA=migrate(dr)}catch(e){}
+
+function findPath(id,list=DATA.pages,path=[]){for(const p of list){const np=[...path,p];if(p.id===id)return np;const r=findPath(id,p.children||[],np);if(r)return r}return null}
+const siblingsOf=path=>path.length>1?path[path.length-2].children:DATA.pages;
+const allPages=()=>{const a=[];eachPage(DATA.pages,(p,par)=>a.push({p,depth:par?(findPath(p.id)||[]).length-1:0}));return a};
+const linkTo=id=>id==="overview"||findPath(id)?id:"overview";
+
+/* ---------- editable words ---------- */
+const LT=(en,zh)=>document.documentElement.classList.contains("zh")&&zh?en+" "+zh:en;
+const UI=k=>(DATA.ui&&DATA.ui[k])||DEFAULT.ui[k]||["",""];
+const U=k=>t(UI(k)[0],UI(k)[1]);
+const Ux=k=>esc(UI(k)[0]);
+const uiField=(k,lab)=>k.startsWith("gate")?bind("ui."+k+".0",lab):`<div class="two">${bind("ui."+k+".0",lab)}${bind("ui."+k+".1",lab+" (中文, optional)")}</div>`;
+const UIGROUPS=[
+ ["Welcome screen",[["gateHello","Small greeting"],["gateTitle","Headline (*stars* = blue)"],["gateTag","Tagline"],["gateBtn","Button"]]],
+ ["Menu & buttons",[["overview","First tab name"],["back","Back button"],["viewPage","Link on page tiles"],["requestCopy","Request-a-copy button"],["requestNote","Request-a-copy note"],["siteTitle","Browser tab title"]]],
+ ["Our school strip",[["ourSchool","Label"],["students","Students word"],["teachers","Teachers word"],["classes","Classes word"],["grades","Grades word"]]],
+ ["Footer",[["visitUs","Visit us heading"],["contact","Contact heading"],["phone","Phone word"],["schoolSite","School website link text"]]],
+ ["Words of the Week list",[["allWords","Heading"],["thisWeek","Newest-word tag"]]],
+ ["Inbox form",[["fName","Name label"],["fEmail","Email label"],["fEmailPh","Email hint"],["fIam","I am a… label"],["fStudent","Choice 1"],["fParent","Choice 2"],["fTeacher","Choice 3"],["fMessage","Message label"],["fSend","Send button"],["fThanks","Thank-you message"]]]];
+const uiPanel=(only)=>UIGROUPS.filter(g=>!only||only.includes(g[0])).map(([g,ks])=>`<details class="pedit uip"${only?" open":""}><summary><b>${esc(g)}</b></summary>${ks.map(([k,l])=>uiField(k,l)).join("")}</details>`).join("");
+const curLogo=()=>DATA.logo&&imgOk(DATA.logo)?DATA.logo:LOGO;
+function applyLook(){document.querySelectorAll("[data-logo]").forEach(el=>{el.innerHTML="";if(curLogo()&&imgOk(curLogo())){el.classList.add("has");const i=document.createElement("img");i.src=curLogo();i.alt="School logo";el.appendChild(i)}})}
+function renderGate(){const g=$("#gatebody");if(!g)return;
+ g.innerHTML=`<p class="ghello">${Ux("gateHello")}</p><h1 class="gtitle">${fmtTitle(UI("gateTitle")[0]).replace(/<em>/g,'<span class="hl">').replace(/<\/em>/g,"</span>")}</h1><div class="rule"></div><p class="tagline nolead gtag">${Ux("gateTag")}</p>`;
+ $("#enter").innerHTML=Ux("gateBtn")}
+
+/* ---------- state ---------- */
+let editing=false,curId="overview",armed="",armT,tt,pick=null;
+const saveDraft=()=>{try{localStorage.setItem("weh-boxes",JSON.stringify(DATA));msg("Saved in this browser. Click “Publish to website” when you’re ready.")}catch(e){msg("This browser couldn’t save (the photos may be too large). Publish now to keep your work.")}};
+const saveSoon=()=>{clearTimeout(tt);tt=setTimeout(saveDraft,500)};
+const msg=s=>{const m=$("#editmsg");if(m)m.textContent=s};
+const arm=(key,el,label)=>{if(armed===key){armed="";clearTimeout(armT);return true}armed=key;clearTimeout(armT);if(el)el.textContent=label;armT=setTimeout(()=>{armed="";render(true)},3000);return false};
+
+/* ---------- media (carousel) ---------- */
+const GAL={};
+const OWNER_EMAIL="calawodangelmae@gmail.com";
+/* media kinds: img (photo), yt (YouTube), doc (Google Slides/Docs/Drive/Forms/Canva link), pdf (uploaded PDF) */
+function docEmbed(u){u=String(u||"").trim();let m;
+ if((m=u.match(/^https:\/\/docs\.google\.com\/presentation\/d\/([\w-]+)/)))return `https://docs.google.com/presentation/d/${m[1]}/embed?start=false&loop=false`;
+ if((m=u.match(/^https:\/\/docs\.google\.com\/(document|spreadsheets)\/d\/([\w-]+)/)))return `https://docs.google.com/${m[1]}/d/${m[2]}/preview`;
+ if((m=u.match(/^https:\/\/docs\.google\.com\/forms\/d\/(e\/)?([\w-]+)/)))return `https://docs.google.com/forms/d/${m[1]||""}${m[2]}/viewform?embedded=true`;
+ if((m=u.match(/^https:\/\/drive\.google\.com\/file\/d\/([\w-]+)/))||(m=u.match(/^https:\/\/drive\.google\.com\/open\?id=([\w-]+)/)))return `https://drive.google.com/file/d/${m[1]}/preview`;
+ if((m=u.match(/^https:\/\/www\.canva\.com\/design\/([\w-]+)\/([\w-]+)/)))return `https://www.canva.com/design/${m[1]}/${m[2]}/view?embed`;
+ return ""}
+const docOk=s=>/^https:\/\/(docs\.google\.com|drive\.google\.com|www\.canva\.com)\//.test(s||"");
+const pdfOk=s=>/^files\/[\w.-]+\.pdf$/i.test(s||"")||/^https:\/\/[^\s"'<>]+\.pdf$/i.test(s||"");
+const thumbOf=x=>x.t==="yt"?`https://i.ytimg.com/vi/${esc(x.id)}/hqdefault.jpg`:esc(x.src);
+const validMedia=m=>(m||[]).filter(x=>x&&((x.t==="img"&&imgOk(x.src))||(x.t==="yt"&&idOk(x.id))||(x.t==="doc"&&docOk(x.url))||(x.t==="pdf"&&pdfOk(x.src))));
+const isDocLike=x=>x.t==="doc"||x.t==="pdf";
+const DOCI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>';
+function slideHtml(x,j){
+ if(x.t==="doc")return `<div class="slide doc" data-j="${j}"><iframe src="${esc(x.url)}" title="${esc(x.name||"Document")}" loading="lazy" allowfullscreen></iframe></div>`;
+ if(x.t==="pdf")return `<div class="slide doc" data-j="${j}"><iframe src="${esc(x.src)}#view=FitH" title="${esc(x.name||"PDF")}" loading="lazy"></iframe><a class="openpdf" href="${esc(x.src)}" target="_blank" rel="noopener">Open PDF ↗</a></div>`;
+ return `<div class="slide" data-j="${j}" ${editing?"":`role="button" tabindex="0" aria-label="${x.t==="yt"?"Play video":"View photo"}"`}><img src="${thumbOf(x)}" alt="" loading="lazy">${x.t==="yt"?PLAY:""}</div>`}
+function mediaHtml(media,gid){
+ const m=validMedia(media);GAL[gid]=m;
+ if(!m.length)return `<div class="pic"><div>${ICON.photo}${t("Photo","照片")}</div></div>`;
+ return `<div class="pic car" data-gid="${esc(gid)}"><div class="track">${m.map(slideHtml).join("")}</div>
+  ${m.length>1?`<button class="cnav cprev" type="button" aria-label="Previous">‹</button><button class="cnav cnext" type="button" aria-label="Next">›</button><div class="dots">${m.map((_,j)=>`<i class="${j?"":"on"}"></i>`).join("")}</div>`:""}</div>`}
+function wireCarousels(){document.querySelectorAll(".car .track").forEach(tk=>{tk.onscroll=()=>{const j=Math.round(tk.scrollLeft/tk.clientWidth);tk.parentElement.querySelectorAll(".dots i").forEach((d,k)=>d.classList.toggle("on",k===j))}})}
+
+/* ---------- blocks ---------- */
+const listFor=key=>key==="home"?DATA.home:(findPath(key)||[]).slice(-1)[0]?.blocks;
+const pageOptions=sel=>[`<option value="overview"${sel==="overview"?" selected":""}>Overview</option>`].concat(allPages().map(({p,depth})=>`<option value="${esc(p.id)}"${p.id===sel?" selected":""}>${"— ".repeat(depth)}${esc(p.name)}</option>`)).join("");
+const shapeCls=b=>validMedia(b.media).some(isDocLike)?" shp-wide":(({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[b.shape]||"");
+const reqLink=b=>`mailto:${OWNER_EMAIL}?subject=${encodeURIComponent("Request for a copy: "+(b.title||"lesson file"))}&body=${encodeURIComponent("Hello Teacher Angel,\n\nMay I please have a copy of \""+(b.title||"this lesson file")+"\"?\n\nMy name:\nI am a (student / parent / teacher):\nWhy I would like it:\n\nThank you!")}`;
+const reqHtml=b=>b.request?`<div class="req"><a class="btn y" href="${reqLink(b)}">${U("requestCopy")}</a><p class="note">${U("requestNote")}</p></div>`:"";
+function textBlockView(b){return `<article class="tblock">${b.title?`<h3>${t(b.title,b.titleZh)}</h3>`:""}${b.text?`<p>${nl(b.text)}${tr(b.textZh)}</p>`:""}${reqHtml(b)}</article>`}
+function blockView(b,i,key){if(b.kind==="text")return textBlockView(b);const home=key==="home";
+ return `<article class="rnd${shapeCls(b)}">${mediaHtml(b.media,key+":"+i)}
+  ${home&&b.label?`<div class="lab">${t(b.label,b.labelZh)}</div>`:""}${b.title?`<h3>${t(b.title,b.titleZh)}</h3>`:""}${b.text?`<p class="txt">${nl(b.text)}${tr(b.textZh)}</p>`:""}
+  ${reqHtml(b)}${home&&b.to?`<a class="more" href="#${esc(linkTo(b.to))}">${t(b.more||"See more →",b.moreZh)}</a>`:""}</article>`}
+const ctl=(b,i,key,len,shape)=>`<div class="bctl">${shape?`<select class="shpsel" data-f="shape" aria-label="Picture shape">${[["circle","● Circle"],["rounded","▢ Rounded square"],["wide","▭ Wide (good for videos)"],["tall","▯ Tall"]].map(([v,l])=>`<option value="${v}"${(b.shape||"circle")===v?" selected":""}>${l}</option>`).join("")}</select>`:`<span class="bkind">Text box</span>`}<button type="button" data-act="bleft" ${i?"":"disabled"} title="Move earlier">◀</button><button type="button" data-act="bright" ${i<len-1?"":"disabled"} title="Move later">▶</button><button type="button" class="danger" data-act="bdel" title="Delete">${armed==="b"+key+i?"Delete?":"×"}</button></div>`;
+const textFields=b=>`<input class="hin ttl" data-f="title" value="${esc(b.title||"")}" placeholder="Title" aria-label="Title">
+  <textarea class="hin" data-f="text" placeholder="Type your text here…" aria-label="Text">${esc(b.text||"")}</textarea>
+  <details class="zhf"><summary>中文 (optional)</summary><input class="hin" data-f="titleZh" value="${esc(b.titleZh||"")}" placeholder="中文標題"><textarea class="hin" data-f="textZh" placeholder="中文內容">${esc(b.textZh||"")}</textarea></details>
+  <label class="chk"><input type="checkbox" data-f="request" ${b.request?"checked":""}> Show a “Request a copy” button (they must email you first)</label>`;
+function blockEdit(b,i,key,len){
+ if(b.kind==="text")return `<article class="tblock ed" data-key="${esc(key)}" data-i="${i}">${ctl(b,i,key,len,false)}${textFields(b)}</article>`;
+ const home=key==="home",m=validMedia(b.media);
+ return `<article class="rnd ed${shapeCls(b)}" data-key="${esc(key)}" data-i="${i}">${ctl(b,i,key,len,true)}
+  ${mediaHtml(b.media,key+":"+i)}
+  <div class="mstrip">${m.map((x,j)=>`<div class="mth">${isDocLike(x)?`<div class="docth">${DOCI}<span>${x.t==="pdf"?"PDF":"Link"}</span></div>`:`<img src="${thumbOf(x)}" alt="">`}${x.t==="yt"?'<span class="ytag">▶</span>':""}<div class="mbtn"><button type="button" data-act="mleft" data-j="${j}" ${j?"":"disabled"} aria-label="Move left">◀</button><button type="button" data-act="mright" data-j="${j}" ${j<m.length-1?"":"disabled"} aria-label="Move right">▶</button><button type="button" class="danger" data-act="mdel" data-j="${j}" aria-label="Remove">×</button></div></div>`).join("")}</div>
+  <div class="madd"><button type="button" class="mini" data-act="addphoto">+ Photos</button><button type="button" class="mini" data-act="addpdf">+ PDF</button></div>
+  <div class="madd"><input class="hin" data-yt placeholder="Paste a YouTube or Google link" aria-label="YouTube or Google link"><button type="button" class="mini" data-act="addyt">+ Add link</button></div>
+  ${home?`<input class="hin lab" data-f="label" value="${esc(b.label||"")}" placeholder="Sub-title" aria-label="Sub-title"><input class="hin lab" data-f="labelZh" value="${esc(b.labelZh||"")}" placeholder="中文副標題 (optional)" aria-label="Chinese sub-title">`:""}
+  ${textFields(b)}
+  ${home?`<div class="lnk"><input class="hin" data-f="more" value="${esc(b.more||"")}" placeholder="Link text, e.g. See more →" aria-label="Link text"><select class="hin" data-f="to" aria-label="Link goes to">${pageOptions(b.to)}</select></div><input class="hin" data-f="moreZh" value="${esc(b.moreZh||"")}" placeholder="中文連結文字 (optional)" aria-label="Chinese link text">`:""}
+ </article>`}
+function blocksHtml(key){const L=listFor(key)||[];
+ return `<div class="rounds" data-list="${esc(key)}">${L.map((b,i)=>editing?blockEdit(b,i,key,L.length):blockView(b,i,key)).join("")}${editing?`<div class="addrow"><button class="add rndadd" type="button" data-act="badd" data-key="${esc(key)}"><div><span>+</span>Picture box</div></button><button class="add rndadd" type="button" data-act="taddt" data-key="${esc(key)}"><div><span>+</span>Text box</div></button></div>`:""}</div>`}
+
+/* ---------- inbox ---------- */
+function inboxHtml(){return `<form class="inbox" id="inboxform" novalidate>
+ <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+ <label>${U("fName")}<input class="hin" name="name" required maxlength="80" autocomplete="name"></label>
+ <label>${U("fEmail")}<input class="hin" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="${Ux("fEmailPh")}"></label>
+ <fieldset><legend>${U("fIam")}</legend><div class="roles">${["fStudent","fParent","fTeacher"].map((key,k)=>`<label class="role"><input type="radio" name="role" value="${esc(UI(key)[0])}" ${k?"":"checked"}><span>${U(key)}</span></label>`).join("")}</div></fieldset>
+ <label>${U("fMessage")}<textarea class="hin" name="message" required maxlength="3000" rows="6"></textarea></label>
+ <button class="btn y" type="submit">${U("fSend")}</button>
+ <p class="note" id="inboxmsg" role="status"></p>
+</form>`}
+document.addEventListener("submit",async e=>{const f=e.target.closest("#inboxform");if(!f)return;e.preventDefault();
+ const fd=new FormData(f),out=$("#inboxmsg"),btn=f.querySelector("button[type=submit]");
+ if(fd.get("_honey"))return;
+ const name=(fd.get("name")||"").trim(),message=(fd.get("message")||"").trim(),email=(fd.get("email")||"").trim(),role=fd.get("role")||"";
+ if(!name||!email||!message){out.textContent=LT("Please fill in your name, email address and message.","請填寫姓名、電子郵件和訊息。");return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){out.textContent=LT("Please check your email address.","請確認電子郵件地址。");return}
+ btn.disabled=true;out.textContent=LT("Sending…","傳送中…");
+ try{const r=await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+   body:JSON.stringify({name,email,role,message,_subject:`Wanlai English Hub Inbox: message from ${name} (${role})`,_template:"table",_captcha:"false",_replyto:email})});
+  const d=await r.json().catch(()=>({}));if(!r.ok||d.success===false||d.success==="false")throw 0;
+  f.reset();out.textContent=LT(UI("fThanks")[0],UI("fThanks")[1])}
+ catch(err){out.innerHTML=`Sorry, it couldn’t be sent right now. You can email Teacher Angel at <a href="mailto:${OWNER_EMAIL}">${OWNER_EMAIL}</a>.`}
+ finally{btn.disabled=false}});
+
+/* ---------- file uploads to GitHub (PDF) ---------- */
+async function ghPutFile(path,b64,message){const g=ghGet();if(!g)throw new Error("setup");
+ const api=`https://api.github.com/repos/${encodeURIComponent(g.user)}/${encodeURIComponent(g.repo)}/contents/${path.split("/").map(encodeURIComponent).join("/")}`;
+ const H={"Authorization":"Bearer "+g.token,"X-GitHub-Api-Version":"2022-11-28","Accept":"application/vnd.github+json"};
+ const r=await fetch(api,{method:"PUT",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({message,content:b64,branch:g.branch})});
+ if(r.status===401||r.status===403)throw new Error("key");if(!r.ok)throw new Error("other")}
+const fileB64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(f)});
+
+/* ---------- page tiles & header ---------- */
+const tileImg=p=>p.img&&imgOk(p.img)?`<div class="pic"><img src="${esc(p.img)}" alt=""></div>`:`<div class="pic ico">${TICON[p.id]||TICON.def}</div>`;
+function tilesHtml(p){if(!p.children.length&&!editing)return "";
+ return `<div class="rounds tilesr">${p.children.map(c=>`<a class="rnd" href="#${esc(c.id)}">${tileImg(c)}<h3>${t(c.name,c.zh)}</h3>${c.desc?`<p class="txt">${t(c.desc,c.descZh)}</p>`:""}<span class="more">${U("viewPage")}</span></a>`).join("")}${editing?`<button class="add rndadd" type="button" data-pact="addsub" data-page="${esc(p.id)}"><div><span>+</span>Add a sub-page</div></button>`:""}</div>`}
+function headHtml(path){const p=path[path.length-1],par=path[path.length-2],sib=siblingsOf(path),ix=sib.indexOf(p);
+ const pills=path.length>=3?`<nav class="pillrow" aria-label="More pages">${par.children.map(c=>`<a href="#${esc(c.id)}" class="${c===p?"on":""}">${t(c.name,c.zh)}</a>`).join("")}</nav>`:"";
+ const top=`<button class="back" type="button" data-up="${par?esc(par.id):"overview"}" aria-label="Go back">${BACK}${U("back")}</button>`;
+ if(!editing)return `<section class="pagehead band"><div class="wrap">${top}${par?`<div class="eyebrow">${t(par.name,par.zh)}</div>`:""}${p.type==="inbox"?`<h1 class="envh" aria-label="${esc(p.name||"Inbox")}">${ENV}</h1>`:`<h1>${t(p.name,p.zh)}</h1>`}${p.desc?`<p>${t(p.desc,p.descZh)}</p>`:""}${pills}</div></section>`;
+ return `<section class="pagehead band"><div class="wrap">${top}
+  <div class="pedit" data-page="${esc(p.id)}">
+   <div class="two"><label>Page name<input class="hin" data-pf="name" value="${esc(p.name)}"></label><label>Chinese name (optional)<input class="hin" data-pf="zh" value="${esc(p.zh||"")}"></label></div>
+   <div class="two"><label>Short description<textarea class="hin" data-pf="desc">${esc(p.desc||"")}</textarea></label><label>Chinese description (optional)<textarea class="hin" data-pf="descZh">${esc(p.descZh||"")}</textarea></label></div>
+   <div class="prow"><button type="button" class="mini" data-pact="pleft" ${ix?"":"disabled"}>◀ Move</button><button type="button" class="mini" data-pact="pright" ${ix<sib.length-1?"":"disabled"}>Move ▶</button>
+    <button type="button" class="mini" data-pact="cover">Tile picture…</button>${p.img?`<button type="button" class="mini" data-pact="nocover">Remove tile picture</button>`:""}
+    <button type="button" class="mini" data-pact="addsub">+ Add a sub-page</button><button type="button" class="mini danger" data-pact="pdel">${armed==="p"+p.id?"Click again to delete":"Delete this page"}</button></div>
+   <label class="chk"><input type="checkbox" data-pf="words" ${p.words?"checked":""}> Show the “Words of the Week” list on this page</label><p class="note">Tip: “Tile picture” is the round picture people click to open this page.</p>
+  </div>${pills}</div></section>`}
+function pageHtml(path){const p=path[path.length-1];
+ return headHtml(path)+`<section class="band"><div class="wrap">${p.type==="inbox"?inboxHtml()+(editing?`<p class="note" style="margin-top:14px">${uiPanel(["Inbox form"])}Messages are sent to ${OWNER_EMAIL}. The very first message will ask you (by email) to activate the form, so send yourself a test message first.</p>`:"")+'<div style="height:40px"></div>':""}${tilesHtml(p)}${tilesHtml(p)&&(p.blocks.length||editing)?'<div style="height:48px"></div>':""}${p.blocks.length||editing?blocksHtml(p.id):""}${p.words?`<h2 style="margin-top:48px">${U("allWords")}</h2>`+(editing?wordEdit():wordList()):""}</div></section>`}
+const wordList=()=>`<ul class="list">${(DATA.words||[]).map((w,i)=>`<li class="${i?"":"now"}">${i?"":`<span class="tag y">${U("thisWeek")}</span>`}<h3 style="margin-top:8px">${esc(w.word)}<span class="tr">${esc(w.zh)}</span></h3><div class="meta">${esc(w.week)} · ${esc(w.pos)}</div><p style="margin:.4em 0 0">“${esc(w.sentence)}”<span class="tr">${esc(w.sentenceZh)}</span></p></li>`).join("")}</ul>`;
+
+const WF=[["word","Word"],["zh","Chinese meaning"],["week","Week (e.g. Nov 23–27, 2026)"],["pos","Kind of word (noun, verb…)"],["sentence","Example sentence"],["sentenceZh","Chinese sentence"]];
+const wordEdit=()=>`<p class="note">The first word is shown as “this week”. Add a new word at the top each week.</p><button type="button" class="mini" data-act="wadd">+ Add a new word (at the top)</button><div class="wlist">${(DATA.words||[]).map((w,i,a)=>`<div class="pedit wrow" data-w="${i}"><div class="three">${WF.map(([f,l])=>`<label class="bl">${l}<input class="hin" data-wf="${f}" value="${esc(w[f]||"")}"></label>`).join("")}</div><div class="prow"><button type="button" class="mini" data-act="wup" ${i?"":"disabled"}>▲ Up</button><button type="button" class="mini" data-act="wdown" ${i<a.length-1?"":"disabled"}>▼ Down</button><button type="button" class="mini danger" data-act="wdel">${armed==="w"+i?"Click again to delete":"Delete word"}</button></div></div>`).join("")}</div>`;
+
+/* ---------- overview ---------- */
+const fmtTitle=s=>esc(s).replace(/\*(.+?)\*/g,"<em>$1</em>");
+const bind=(path,label,opts={})=>{const v=path.split(".").reduce((o,k)=>o?.[k],DATA)??"";return `<label class="bl">${label}${opts.area?`<textarea class="hin" data-bind="${path}">${esc(v)}</textarea>`:`<input class="hin" data-bind="${path}" value="${esc(v)}"${opts.ph?` placeholder="${esc(opts.ph)}"`:""}>`}</label>`};
+const bindSel=(path,label)=>{const v=path.split(".").reduce((o,k)=>o?.[k],DATA)||"";return `<label class="bl">${label}<select class="hin" data-bind="${path}">${pageOptions(v)}</select></label>`};
+function overview(){const h=DATA.hero,hh=DATA.homeHead,s=DATA.school;
+ const heroView=`<h1>${fmtTitle(h.title)}${tr(h.titleZh)}</h1><p class="lead">${t(h.lead,h.leadZh)}</p><p class="tagline nolead"><span>${t(h.tagline,h.taglineZh)}</span></p>
+   <div class="btns">${h.b1?`<a class="btn y" href="#${esc(linkTo(h.b1To))}">${t(h.b1,h.b1Zh)}</a>`:""}${h.b2?`<a class="btn y" href="#${esc(linkTo(h.b2To))}">${t(h.b2,h.b2Zh)}</a>`:""}</div>`;
+ const heroEdit=`<div class="pedit">${bind("hero.title","Headline (put *stars* around words to make them blue italic)")}${bind("hero.titleZh","Chinese headline (optional)")}${bind("hero.lead","Intro text",{area:1})}${bind("hero.leadZh","Chinese intro (optional)",{area:1})}${bind("hero.tagline","Tagline")}${bind("hero.taglineZh","Chinese tagline (optional)")}
+   <div class="two">${bind("hero.b1","Button 1 text")}${bindSel("hero.b1To","Button 1 goes to")}</div>${bind("hero.b1Zh","Button 1 Chinese (optional)")}<div class="two">${bind("hero.b2","Button 2 text")}${bindSel("hero.b2To","Button 2 goes to")}</div>${bind("hero.b2Zh","Button 2 Chinese (optional)")}
+   <div class="prow"><button type="button" class="mini" data-act="heroimg">Change background picture…</button>${DATA.heroImg?`<button type="button" class="mini" data-act="heroimg0">Use original background</button>`:""}<button type="button" class="mini" data-act="logoimg">Change logo…</button>${DATA.logo?`<button type="button" class="mini" data-act="logoimg0">Use original logo</button>`:""}</div></div>`;
+ return `<section class="hero"${DATA.heroImg&&imgOk(DATA.heroImg)?` style="--herobg:url(${esc(DATA.heroImg)})"`:""}><div class="wrap"><div>${editing?heroEdit:heroView}</div></div></section>
  <section class="band"><div class="wrap">
-  <div class="eyebrow">${t("This week","本週")}</div><h2>${t("What’s happening in Wanlai English Hub","萬來英語中心近況")}</h2>
-  ${homeHtml()}
+  ${editing?`<div class="pedit"><div class="two">${bind("homeHead.eyebrow","Small label")}${bind("homeHead.eyebrowZh","Small label Chinese (optional)")}</div><div class="two">${bind("homeHead.title","Section title")}${bind("homeHead.titleZh","Section title Chinese (optional)")}</div></div>`:`${hh.eyebrow?`<div class="eyebrow">${t(hh.eyebrow,hh.eyebrowZh)}</div>`:""}<h2>${t(hh.title,hh.titleZh)}</h2>`}
+  <div style="margin-top:30px">${blocksHtml("home")}</div>
  </div></section>
  <section class="navy school"><div class="wrap">
-  <div class="srow"><div><div class="eyebrow" style="color:#ffd35c;margin-bottom:4px">${t("Our school","我們的學校")}</div><h3 style="color:#fff;margin:0">Wanlai Elementary School<span class="tr">彰化縣北斗鎮萬來國民小學</span></h3></div>
-  <ul class="facts1"><li><b>${esc(SCHOOL.students)}</b> ${t("students","學生")}</li><li><b>${esc(SCHOOL.teachers)}</b> ${t("teachers","教師")}</li><li><b>${esc(SCHOOL.classes)}</b> ${t("classes","班級")}</li><li><b>1–6</b> ${t("grades","年級")}</li></ul></div>
-  <p class="note" style="margin:10px 0 0">${esc(SCHOOL.source)}</p>
- </div></section>`;
+  ${editing?`<div class="pedit dk"><div class="two">${bind("school.name","School name")}${bind("school.nameZh","Chinese name")}</div><div class="four">${bind("school.students","Students")}${bind("school.teachers","Teachers")}${bind("school.classes","Classes")}${bind("school.grades","Grades")}</div><div class="two">${bind("school.note","Small note")}${bind("school.noteZh","Small note Chinese (optional)")}</div></div>
+   <div class="pedit dk" style="margin-top:14px"><b>Footer</b><div class="two">${bind("footer.title","Title")}${bind("footer.titleZh","Title Chinese (optional)")}</div><div class="two">${bind("footer.tag","Tagline")}${bind("footer.tagZh","Tagline Chinese (optional)")}</div><div class="two">${bind("footer.by","Line under tagline")}${bind("footer.byZh","Line under tagline Chinese (optional)")}</div>${bind("footer.phone","Phone")}<div class="two">${bind("footer.address","Address",{area:1})}${bind("footer.addressZh","Chinese address",{area:1})}</div>${bind("footer.link","School website link",{ph:"https://"})}</div>
+   <div style="margin-top:14px"><p class="note" style="color:#fff">Other words on the website (click a group to open it):</p>${uiPanel()}</div>`
+  :`<div class="srow"><div><div class="eyebrow" style="color:#ffd35c;margin-bottom:4px">${U("ourSchool")}</div><h3 style="color:#fff;margin:0">${t(s.name,s.nameZh)}</h3></div>
+   <ul class="facts1"><li><b>${esc(s.students)}</b> ${U("students")}</li><li><b>${esc(s.teachers)}</b> ${U("teachers")}</li><li><b>${esc(s.classes)}</b> ${U("classes")}</li><li><b>${esc(s.grades)}</b> ${U("grades")}</li></ul></div>
+   ${s.note?`<p class="note" style="margin:10px 0 0">${t(s.note,s.noteZh)}</p>`:""}`}
+ </div></section>`}
+function renderFooter(){const f=DATA.footer;$("#foot").innerHTML=`<div class="wrap">
+  <div><b>${t(f.title,f.titleZh)}</b><i>${t(f.tag,f.tagZh)}</i><br>${t(f.by,f.byZh)}</div>
+  <div><b>${U("visitUs")}</b>${nl(f.address)}${tr(f.addressZh)}</div>
+  <div><b>${U("contact")}</b>${Ux("phone")} ${esc(f.phone)}${UI("phone")[1]?`<span class="tr">${esc(UI("phone")[1])} ${esc(f.phone)}</span>`:""}${safeUrl(f.link)?`<br><a href="${esc(f.link)}">${U("schoolSite")}</a>`:""}<br><button class="editlink" id="editlink" type="button">Edit pages</button></div></div>`;
+ $("#editlink").onclick=()=>{setEditing(true);showViews()}}
+const safeUrl=u=>/^https:\/\//.test(u||"");
+
+/* ---------- navigation & render ---------- */
+function renderNav(path){const top=path?path[0]:null;
+ $("#tabs").innerHTML=`<a href="#overview" class="${top?"":"on"}">${U("overview")}</a>`+DATA.pages.map(p=>p.type==="inbox"?`<a href="#${esc(p.id)}" class="envtab ${p===top?"on":""}" aria-label="${esc(p.name||"Inbox")}" title="${esc(p.name||"Inbox")}">${ENV}</a>`:`<a href="#${esc(p.id)}" class="${p===top?"on":""}">${t(p.name,p.zh)}</a>`).join("")+(editing?`<button class="addtab" type="button" data-pact="addtop">+ Tab</button>`:"");
+ $("#sub").innerHTML=top&&(top.children.length||editing)?`<div class="wrap">${top.children.map(c=>`<a href="#${esc(c.id)}" class="${path[1]===c?"on":""}">${t(c.name,c.zh)}</a>`).join("")}${editing?`<button class="addtab sm" type="button" data-pact="addsub" data-page="${esc(top.id)}">+ Sub-tab</button>`:""}</div>`:""}
+function render(keep){
+ const id=(location.hash||"#overview").slice(1)||"overview";
+ const path=id==="overview"?null:findPath(id);curId=path?id:"overview";
+ renderNav(path);
+ main.innerHTML=path?pageHtml(path):overview();
+ renderFooter();wireCarousels();
+ const p=path&&path[path.length-1];const st=UI("siteTitle")[0]||"Wanlai English Hub";document.title=p?p.name+" · "+st:st;renderGate();applyLook();
+ if(!keep){window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0))}
 }
 
-const BACK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
-let navDepth=0;window.addEventListener("hashchange",()=>{navDepth++});
-main.addEventListener("click",e=>{const b=e.target.closest(".back");if(!b)return;if(navDepth>0){navDepth-=2;history.back()}else location.hash="#"+b.dataset.up});
-function head(top,sub){
- const n=sub||top,en=sub?sub.d:top.intro,zh=sub?sub.dz:top.introZh;
- return `<section class="pagehead band"><div class="wrap"><button class="back" type="button" data-up="${sub?top.id:"overview"}" aria-label="Go back">${BACK}${t("Back","返回")}</button>${sub?`<div class="eyebrow">${t(top.name,top.zh)}</div>`:""}<h1>${t(n.name,n.zh)}</h1><p>${t(en,zh)}</p></div></section>`}
-
-const okSrc=s=>/^https:\/\//.test(s)||/^[\w][\w ./-]*$/.test(s)&&!s.includes("..");
-const ytId=s=>{const m=String(s).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{6,})/);return m?m[1]:""};
-const ICON={photo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>',
- video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>'};
-function slot(m,extra=""){
- const s=(m.src||"").trim(),cap=m.caption?`<figcaption>${esc(m.caption)}</figcaption>`:"";
- const cls=`frame ${m.type==="video"?"vid":""} ${extra}`;
- if(!s||!okSrc(s))return `<figure class="${cls}"><div class="box"><div>${ICON[m.type]||ICON.photo}${m.type==="video"?t("Video","影片"):t("Photo","照片")}</div></div>${cap}</figure>`;
- let inner;
- if(m.type==="video"){const id=ytId(s);inner=id?`<iframe src="https://www.youtube.com/embed/${esc(id)}" title="${esc(m.caption||"Video")}" allowfullscreen loading="lazy"></iframe>`:`<video src="${esc(s)}" controls preload="metadata"></video>`;}
- else inner=`<img src="${esc(s)}" alt="${esc(m.caption||"Photo")}" loading="lazy">`;
- return `<figure class="${cls} full"><div class="box">${inner}</div>${cap}</figure>`;
-}
-/* ---------- editable boxes ---------- */
-const readBaked=()=>{try{return JSON.parse(document.getElementById("boxdata").textContent||"{}")||{}}catch(e){return {}}};
-let BOX=readBaked();
-try{const d=JSON.parse(localStorage.getItem("weh-boxes")||"null");if(d&&typeof d==="object")BOX=d}catch(e){}
-let editing=false,curPage=null,pickIdx=-1,delArm=-1,delTimer;
-// Starter boxes for each sub-topic (sample text — replace it in Edit mode)
-const STARTER={
- "classroom-english":[["Greetings","Good morning, Teacher Angel! How are you today?"],["Asking for help","Excuse me. Can you help me, please?"],["Classroom instructions","Stand up. Sit down. Open your book, please."]],
- "morning-assembly":[["Song of the Month","Sing along with this month’s English song."],["Sentence of the Week","Learn one useful sentence with the whole school."],["Student performances","Our students share English on stage."]],
- "english-announcements":[["Wanlai On Air","A 1-minute English broadcast every week at break time."],["Week 2: Excuse me!","“Excuse me, Teacher Angel. May I borrow a pencil?”"],["Week 3: Asking for permission","“May I go to the restroom?”"]],
- "reading-corner":[["Book of the Month","A picture book we are reading together."],["Story time","Listen, read along and talk about the story."],["Reading challenge","How many English books can you read this term?"]],
- "practice-corner":[["Word of the Week","permission — “May I go to the restroom? Yes, you may!”"],["Phonics practice","Say the sounds, then read the words."],["Speaking games","Play, talk and practise with friends."]],
- "english-club":[["Songs & chants","We sing and move to learn new words."],["Games","Fun games that get everyone speaking."],["Projects","Make, create and present in English."]],
- "school-tour":[["Our classrooms","This is where we learn every day."],["The library","Find a good book to read."],["The playground","Let’s play together at break time!"]],
- "sister-schools":[["Our sister schools","Meet our friends from around the world."],["Video exchanges","We share videos and say hello."],["Pen pals","Write letters and make new friends."]]
-};
-const boxesFor=id=>{if(!Array.isArray(BOX[id]))BOX[id]=(STARTER[id]||[["",""],["",""]]).map(([title,text])=>({title,img:"",text}));return BOX[id]};
-const saveDraft=()=>{try{localStorage.setItem("weh-boxes",JSON.stringify(BOX));$("#editmsg").textContent="Saved in this browser. When you’re finished, download the updated site file."}catch(e){$("#editmsg").textContent="This browser couldn’t save (the photos may be too large). Download the site file now to keep your work."}};
-const imgOk=s=>/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(s)||okSrc(s);
-const PLAY='<span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5l12 7-12 7z" fill="currentColor"/></svg></span>';
-function picInner(b){const vid=ytId(b.video||"");
- if(b.img&&imgOk(b.img))return `<img src="${esc(b.img)}" alt="">${vid?PLAY:""}`;
- if(vid)return `<img src="https://i.ytimg.com/vi/${esc(vid)}/hqdefault.jpg" alt="">${PLAY}`;
- return `<div>${ICON.photo}${t("Photo","照片")}</div>`}
-const playAttr=b=>{const v=ytId(b.video||"");return v&&!editing?` data-play="${esc(v)}" role="button" tabindex="0" aria-label="Play video"`:""};
-function boxesHtml(id){
- const list=boxesFor(id);
- return `<div class="rounds">${list.map((b,i)=>`<div class="rnd bx">
-  ${editing?`<button class="x" type="button" data-del="${i}" aria-label="Delete this box">${delArm===i?"Delete?":"×"}</button>`:""}
-  <div class="pic" ${editing?`data-pick="${i}" role="button" tabindex="0" aria-label="Choose a photo"`:playAttr(b)}>${picInner(b)}</div>
-  ${editing?`<input class="hin ttl bxt" data-ttl="${i}" value="${esc(b.title||"")}" placeholder="Title" aria-label="Box title">`:(b.title?`<h3 class="bxh">${esc(b.title)}</h3>`:"")}
-  ${editing?`<textarea data-txt="${i}" placeholder="Type your text here…" aria-label="Box text">${esc(b.text)}</textarea><input class="hin vid" data-vid="${i}" value="${esc(b.video||"")}" placeholder="YouTube link (optional)" aria-label="YouTube link">`:`<div class="txt">${esc(b.text)}</div>`}
- </div>`).join("")}${editing?`<button class="add rndadd" id="addbox" type="button"><div><span>+</span>Add a box</div></button>`:""}</div>`;
-}
-function resizeImg(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const m=1400,s=Math.min(1,m/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.82))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
-function rerenderBoxes(){const el=document.querySelector(".rounds");if(el&&curPage)el.outerHTML=boxesHtml(curPage)}
-main.addEventListener("click",e=>{
- if(!editing||!curPage)return;
- const d=e.target.closest("[data-del]");
- if(d){const l=boxesFor(curPage),i=+d.dataset.del,b=l[i];clearTimeout(delTimer);
-  if((b.img||b.text||b.title)&&delArm!==i){delArm=i;rerenderBoxes();delTimer=setTimeout(()=>{delArm=-1;rerenderBoxes()},3000);return}
-  delArm=-1;l.splice(i,1);saveDraft();rerenderBoxes();return}
- const p=e.target.closest("[data-pick]");if(p){pickIdx=+p.dataset.pick;pickHome=-1;$("#picker").value="";$("#picker").click();return}
- if(e.target.closest("#addbox")){boxesFor(curPage).push({title:"",img:"",text:""});saveDraft();rerenderBoxes();const a=document.querySelectorAll(".bx");a[a.length-1]?.scrollIntoView({behavior:"smooth",block:"center"})}
-});
-main.addEventListener("keydown",e=>{const p=e.target.closest("[data-pick],[data-hpick]");if(p&&(e.key==="Enter"||e.key===" ")){e.preventDefault();p.click()}});
-let tt;main.addEventListener("input",e=>{const vi=e.target.closest("[data-vid]");if(vi&&curPage){boxesFor(curPage)[+vi.dataset.vid].video=vi.value.trim();clearTimeout(tt);tt=setTimeout(saveDraft,500);return}const ti=e.target.closest("[data-ttl]");if(ti&&curPage){boxesFor(curPage)[+ti.dataset.ttl].title=ti.value;clearTimeout(tt);tt=setTimeout(saveDraft,500);return}const ta=e.target.closest("[data-txt]");if(!ta||!curPage)return;boxesFor(curPage)[+ta.dataset.txt].text=ta.value;clearTimeout(tt);tt=setTimeout(saveDraft,500)});
-$("#picker").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;if(pickHome>=0){const i=pickHome;pickHome=-1;try{homeCards()[i].img=await resizeImg(f);saveDraft();render(true)}catch(err){$("#editmsg").textContent="That file couldn’t be read as a photo. Try a JPG or PNG."}return}if(pickIdx<0||!curPage)return;$("#editmsg").textContent="Adding photo…";try{boxesFor(curPage)[pickIdx].img=await resizeImg(f);saveDraft();rerenderBoxes()}catch(err){$("#editmsg").textContent="That file couldn’t be read as a photo. Try a JPG or PNG."}});
-function setEditing(on){editing=on;document.body.classList.toggle("editing",on);$("#editbar").hidden=!on;
- render(true)}
-$("#editlink").addEventListener("click",()=>setEditing(true));
+/* ---------- editing actions ---------- */
+function newPage(parent){const np=PG(slug("new page"),"New page","","","",[BX("",""),BX("","")],[]);(parent?parent.children:DATA.pages).push(np);saveDraft();location.hash="#"+np.id;if(curId===np.id)render()}
+function move(arr,i,d){const j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]]}
+document.addEventListener("click",e=>{
+ if(!editing)return;
+ const pa=e.target.closest("[data-pact]");
+ if(pa){const act=pa.dataset.pact;
+  if(act==="addtop")return newPage(null);
+  const pid=pa.dataset.page||pa.closest("[data-page]")?.dataset.page||curId;const path=findPath(pid);
+  if(act==="addsub"&&path)return newPage(path[path.length-1]);
+  if(!path)return;const p=path[path.length-1],sib=siblingsOf(path),ix=sib.indexOf(p);
+  if(act==="pleft"){move(sib,ix,-1);saveDraft();render(true)}
+  if(act==="pright"){move(sib,ix,1);saveDraft();render(true)}
+  if(act==="cover"){pick={type:"cover",id:p.id};$("#picker").accept="image/*";$("#picker").multiple=false;$("#picker").value="";$("#picker").click()}
+  if(act==="nocover"){p.img="";saveDraft();render(true)}
+  if(act==="pdel"){if(!arm("p"+p.id,pa,"Click again to delete"))return;sib.splice(ix,1);saveDraft();const par=path[path.length-2];location.hash="#"+(par?par.id:"overview");render()}
+  return}
+ const ba=e.target.closest("[data-act]");if(!ba)return;const act=ba.dataset.act;
+ if(act==="wadd"){DATA.words.unshift({word:"",zh:"",pos:"",sentence:"",sentenceZh:"",week:""});saveDraft();render(true);return}
+ if(act==="wup"||act==="wdown"||act==="wdel"){const r=ba.closest("[data-w]"),i=+r.dataset.w;if(act==="wdel"){if(!arm("w"+i,ba,"Click again to delete"))return;DATA.words.splice(i,1)}else move(DATA.words,i,act==="wup"?-1:1);saveDraft();render(true);return}
+ if(act==="heroimg"||act==="logoimg"){pick={type:act};const pk=$("#picker");pk.accept="image/*";pk.multiple=false;pk.value="";pk.click();return}
+ if(act==="heroimg0"){DATA.heroImg="";saveDraft();render(true);return}
+ if(act==="logoimg0"){DATA.logo="";saveDraft();render(true);return}
+ if(act==="taddt"){const L=listFor(ba.dataset.key);if(!L)return;L.push({kind:"text",title:"",text:"",media:[]});saveDraft();render(true);return}
+ if(act==="badd"){const L=listFor(ba.dataset.key);if(!L)return;L.push(ba.dataset.key==="home"?{label:"",title:"",text:"",media:[],to:"english-hub",more:"See more →"}:BX("",""));saveDraft();render(true);return}
+ const art=ba.closest("[data-key]");if(!art)return;const key=art.dataset.key,i=+art.dataset.i,L=listFor(key);if(!L||!L[i])return;const b=L[i];b.media=validMedia(b.media);const j=+ba.dataset.j;
+ if(act==="bleft")move(L,i,-1);else if(act==="bright")move(L,i,1);
+ else if(act==="bdel"){if((b.title||b.text||b.media.length)&&!arm("b"+key+i,ba,"Delete?"))return;L.splice(i,1)}
+ else if(act==="mleft")move(b.media,j,-1);else if(act==="mright")move(b.media,j,1);else if(act==="mdel")b.media.splice(j,1);
+ else if(act==="addphoto"){pick={type:"block",key,i};$("#picker").accept="image/*";$("#picker").multiple=true;$("#picker").value="";$("#picker").click();return}
+ else if(act==="addyt"){const inp=art.querySelector("[data-yt]"),v=inp.value.trim(),id=ytId(v),de=docEmbed(v);if(id)b.media.push({t:"yt",id});else if(de)b.media.push({t:"doc",url:de});else{msg("Paste a YouTube link, or a Google Slides / Docs / Sheets / Forms / Drive link (set to “Anyone with the link can view”).");inp.focus();return}}
+ else if(act==="addpdf"){if(!ghGet()){msg("To upload PDFs, first click “Set up publishing” in this bar.");openSetup();return}pick={type:"pdf",key,i};const pk=$("#picker");pk.accept="application/pdf";pk.multiple=false;pk.value="";pk.click();return}
+ else return;
+ saveDraft();render(true)});
+document.addEventListener("keydown",e=>{if(editing&&e.key==="Enter"&&e.target.matches("[data-yt]")){e.preventDefault();e.target.closest("[data-key]").querySelector('[data-act="addyt"]').click()}});
+main.addEventListener("input",e=>{if(!editing)return;const el=e.target;
+ const wf=el.closest("[data-wf]");if(wf){const w=DATA.words[+el.closest("[data-w]").dataset.w];if(w){w[wf.dataset.wf]=el.value;saveSoon()}return}
+ const bd=el.closest("[data-bind]");if(bd){const ks=bd.dataset.bind.split("."),last=ks.pop(),o=ks.reduce((a,k)=>a[k],DATA);o[last]=el.value;if(ks[0]==="footer"||ks[0]==="ui")renderFooter();if(ks[0]==="ui"){renderNav(curId==="overview"?null:findPath(curId));renderGate()}saveSoon();return}
+ const pf=el.closest("[data-pf]");if(pf){const path=findPath(el.closest("[data-page]").dataset.page);if(path){path[path.length-1][pf.dataset.pf]=el.type==="checkbox"?el.checked:el.value;renderNav(findPath(curId));saveSoon();if(el.type==="checkbox")render(true)}return}
+ const f=el.closest("[data-f]");if(f){const art=el.closest("[data-key]"),L=listFor(art.dataset.key),b=L&&L[+art.dataset.i];if(b){b[f.dataset.f]=el.type==="checkbox"?el.checked:el.value;saveSoon()}}});
+main.addEventListener("change",e=>{if(editing&&e.target.matches("select")){saveDraft();if(e.target.matches(".shpsel"))render(true)}});
+function resizeImg(file,max=1400){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.82))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+$("#picker").addEventListener("change",async e=>{const files=[...e.target.files];if(!files.length||!pick)return;const pk=pick;pick=null;msg("Adding photos…");
+ try{if(pk.type==="pdf"){const f=files[0];if(!/\.pdf$/i.test(f.name)&&f.type!=="application/pdf")throw new Error("type");if(f.size>25e6){msg("That PDF is bigger than 25 MB. Please make it smaller (e.g. export with smaller images) and try again.");return}
+   msg("Uploading PDF… please wait.");const name=f.name.replace(/\.pdf$/i,"").replace(/[^\w.-]+/g,"-").slice(0,40)||"file";const path=`files/${Date.now()}-${name}.pdf`;
+   await ghPutFile(path,await fileB64(f),"Upload "+f.name);const L=listFor(pk.key),b=L&&L[pk.i];if(b){b.media=validMedia(b.media);b.media.push({t:"pdf",src:path,name:f.name})}
+   saveDraft();render(true);msg("PDF uploaded. Click “Publish to website”. (A new PDF can take a minute or two before it shows.)");return}
+  if(pk.type==="heroimg"){DATA.heroImg=await resizeImg(files[0],1800)}
+  else if(pk.type==="logoimg"){DATA.logo=await resizeImg(files[0],300)}
+  else if(pk.type==="cover"){const path=findPath(pk.id);if(path)path[path.length-1].img=await resizeImg(files[0],700)}
+  else{const L=listFor(pk.key),b=L&&L[pk.i];if(b){b.media=validMedia(b.media);for(const f of files)b.media.push({t:"img",src:await resizeImg(f)})}}
+  saveDraft();render(true)}catch(err){msg(err&&err.message==="key"?"GitHub didn’t accept the access key. Click “Change” and paste a new key.":err&&err.message==="type"?"Please choose a PDF file.":pk.type==="pdf"?"The PDF couldn’t be uploaded. Check your internet connection and try again.":"That file couldn’t be read as a photo. Try a JPG or PNG.")}});
+function setEditing(on){editing=on;document.body.classList.toggle("editing",on);$("#editbar").hidden=!on;if(on)msg("Editing. Change text, add photos or YouTube videos, add tabs with “+ Tab”, then click “Publish to website”.");render(true)}
 $("#done").addEventListener("click",()=>setEditing(false));
 const disc=$("#discard");let discArm=false,discT;
 disc.addEventListener("click",()=>{clearTimeout(discT);
  if(!discArm){discArm=true;disc.textContent="Click again to discard";discT=setTimeout(()=>{discArm=false;disc.textContent="Discard changes"},3000);return}
- discArm=false;disc.textContent="Discard changes";try{localStorage.removeItem("weh-boxes")}catch(e){}BOX=readBaked();$("#editmsg").textContent="Changes discarded.";render(true)});
-/* ---------- Publish to GitHub (owner only; key stays in this browser) ---------- */
+ discArm=false;disc.textContent="Discard changes";try{localStorage.removeItem("weh-boxes")}catch(e){}DATA=migrate(readBaked());msg("Changes discarded.");if(!findPath(curId))location.hash="#overview";render(true)});
+
+/* ---------- back button ---------- */
+let navDepth=0;window.addEventListener("hashchange",()=>{navDepth++});
+main.addEventListener("click",e=>{const b=e.target.closest(".back");if(!b)return;if(navDepth>0){navDepth-=2;history.back()}else location.hash="#"+b.dataset.up});
+
+/* ---------- carousel + viewer ---------- */
+const lbx=$("#lightbox");let lbList=[],lbI=0;
+function lbShow(){const x=lbList[lbI];if(!x)return;const v=lbx.querySelector(".lbv");
+ v.classList.toggle("isimg",x.t==="img");
+ v.innerHTML=x.t==="yt"?`<iframe src="https://www.youtube-nocookie.com/embed/${esc(x.id)}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`:`<img src="${esc(x.src)}" alt="">`;
+ lbx.querySelectorAll(".lbnav").forEach(b=>b.hidden=lbList.length<2)}
+function openViewer(gid,j){const all=GAL[gid]||[],it=all[j];lbList=all.filter(x=>!isDocLike(x));lbI=Math.max(0,lbList.indexOf(it));lbShow();lbx.hidden=false;lbx.querySelector(".lbx-close").focus()}
+function closeViewer(){lbx.hidden=true;lbx.querySelector(".lbv").innerHTML=""}
+main.addEventListener("click",e=>{
+ const nav=e.target.closest(".cnav");if(nav){const tk=nav.parentElement.querySelector(".track");tk.scrollBy({left:(nav.classList.contains("cnext")?1:-1)*tk.clientWidth,behavior:"smooth"});return}
+ if(editing)return;const s=e.target.closest(".slide:not(.doc)");if(s){openViewer(s.closest("[data-gid]").dataset.gid,+s.dataset.j)}});
+main.addEventListener("keydown",e=>{const s=e.target.closest(".slide:not(.doc)");if(s&&!editing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openViewer(s.closest("[data-gid]").dataset.gid,+s.dataset.j)}});
+lbx.addEventListener("click",e=>{if(e.target===lbx||e.target.closest(".lbx-close"))return closeViewer();const n=e.target.closest(".lbnav");if(n){lbI=(lbI+(n.classList.contains("lbnext")?1:-1)+lbList.length)%lbList.length;lbShow()}});
+document.addEventListener("keydown",e=>{if(lbx.hidden)return;if(e.key==="Escape")closeViewer();if(e.key==="ArrowRight"&&lbList.length>1){lbI=(lbI+1)%lbList.length;lbShow()}if(e.key==="ArrowLeft"&&lbList.length>1){lbI=(lbI-1+lbList.length)%lbList.length;lbShow()}});
+
+/* ---------- publish to GitHub (owner only; key stays in this browser) ---------- */
 const GH_KEY="weh-gh";
 const ghGet=()=>{try{return JSON.parse(localStorage.getItem(GH_KEY)||"null")}catch(e){return null}};
 const ghSet=v=>{try{v?localStorage.setItem(GH_KEY,JSON.stringify(v)):localStorage.removeItem(GH_KEY)}catch(e){}};
 function ghStatus(){const g=ghGet(),s=$("#ghstatus");if(!s)return;
  s.textContent=g?`Publishing to ${g.user}/${g.repo} (${g.branch}) · `:"Not connected yet · ";
  const a=document.createElement("button");a.type="button";a.className="linkbtn";a.textContent=g?"Change":"Set up publishing";a.onclick=()=>openSetup();s.appendChild(a);}
-function openSetup(){const g=ghGet()||{};const d=$("#ghsetup");d.hidden=false;
+function openSetup(){const g=ghGet()||{};$("#ghsetup").hidden=false;
  $("#gh-user").value=g.user||"";$("#gh-repo").value=g.repo||"";$("#gh-branch").value=g.branch||"main";$("#gh-path").value=g.path||"index.html";$("#gh-token").value="";$("#gh-token").placeholder=g.token?"(saved — leave empty to keep)":"github_pat_…";$("#gh-user").focus();}
 $("#ghsetup").addEventListener("submit",e=>{e.preventDefault();const old=ghGet()||{};
  const v={user:$("#gh-user").value.trim(),repo:$("#gh-repo").value.trim(),branch:$("#gh-branch").value.trim()||"main",path:$("#gh-path").value.trim()||"index.html",token:$("#gh-token").value.trim()||old.token||""};
  if(!/^[\w.-]+$/.test(v.user)||!/^[\w.-]+$/.test(v.repo)||!v.token){$("#ghmsg").textContent="Please fill in your username, repository and access key.";return}
- ghSet(v);$("#ghsetup").hidden=true;ghStatus();$("#editmsg").textContent="Publishing is set up. Click “Publish to website” when you’re ready.";});
+ ghSet(v);$("#ghsetup").hidden=true;ghStatus();msg("Publishing is set up. Click “Publish to website” when you’re ready.")});
 $("#gh-cancel").addEventListener("click",()=>{$("#ghsetup").hidden=true});
-$("#gh-forget").addEventListener("click",()=>{ghSet(null);$("#ghsetup").hidden=true;ghStatus();$("#editmsg").textContent="Your access key was removed from this browser."});
+$("#gh-forget").addEventListener("click",()=>{ghSet(null);$("#ghsetup").hidden=true;ghStatus();msg("Your access key was removed from this browser.")});
 const b64utf8=s=>{const b=new TextEncoder().encode(s);let r="";for(let i=0;i<b.length;i+=0x8000)r+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(r)};
+const RE_DATA=/(<script type="application\/json" id="boxdata">)[\s\S]*?(<\/script>)/;
+const withData=src=>{if(!RE_DATA.test(src))return null;const json=JSON.stringify(DATA).replace(/</g,"\\u003c");return src.replace(RE_DATA,(m,a,b)=>a+json+b)};
 $("#publish").addEventListener("click",async()=>{
- const g=ghGet(),msg=$("#editmsg"),btn=$("#publish");if(!g){openSetup();return}
+ const g=ghGet(),btn=$("#publish");if(!g){openSetup();return}
  const api=`https://api.github.com/repos/${encodeURIComponent(g.user)}/${encodeURIComponent(g.repo)}/contents/${g.path.split("/").map(encodeURIComponent).join("/")}`;
  const H={"Authorization":"Bearer "+g.token,"X-GitHub-Api-Version":"2022-11-28"};
- btn.disabled=true;msg.textContent="Publishing…";
+ btn.disabled=true;msg("Publishing…");
  try{
   const meta=await fetch(api+"?ref="+encodeURIComponent(g.branch),{headers:{...H,"Accept":"application/vnd.github+json"},cache:"no-store"});
   if(meta.status===401||meta.status===403)throw new Error("key");if(meta.status===404)throw new Error("notfound");if(!meta.ok)throw new Error("other");
   const sha=(await meta.json()).sha;
   const raw=await fetch(api+"?ref="+encodeURIComponent(g.branch),{headers:{...H,"Accept":"application/vnd.github.raw+json"},cache:"no-store"});
-  if(!raw.ok)throw new Error("other");let src=await raw.text();
-  const re=/(<script type="application\/json" id="boxdata">)[\s\S]*?(<\/script>)/;if(!re.test(src))throw new Error("format");
-  const json=JSON.stringify(BOX).replace(/</g,"\\u003c");src=src.replace(re,(m,a,b)=>a+json+b);
+  if(!raw.ok)throw new Error("other");const src=withData(await raw.text());if(!src)throw new Error("format");
   const put=await fetch(api,{method:"PUT",headers:{...H,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({message:"Update website content",content:b64utf8(src),sha,branch:g.branch})});
   if(put.status===401||put.status===403)throw new Error("key");if(put.status===409)throw new Error("conflict");if(!put.ok)throw new Error("other");
   try{localStorage.removeItem("weh-boxes")}catch(e){}
-  msg.textContent="Published! Your changes will be live for everyone in about a minute.";
- }catch(err){
-  const k=err.message;
-  msg.textContent=k==="key"?"GitHub didn’t accept the access key. Click “Change” and paste a new key with Contents: Read and write."
+  msg("Published! Your changes will be live for everyone in about a minute.");
+ }catch(err){const k=err.message;
+  msg(k==="key"?"GitHub didn’t accept the access key. Click “Change” and paste a new key with Contents: Read and write."
    :k==="notfound"?"Couldn’t find that repository or file. Click “Change” and check the username, repository and branch."
    :k==="conflict"?"The website changed at the same time. Please click Publish again."
    :k==="format"?"The file on GitHub isn’t this website’s file. Check the file path under “Change”."
-   :"Couldn’t publish right now. Check your internet connection and try again. Your changes are still saved here.";
- }finally{btn.disabled=false}
-});
+   :"Couldn’t publish right now. Check your internet connection and try again. Your changes are still saved here.");
+ }finally{btn.disabled=false}});
+$("#dl").addEventListener("click",async()=>{msg("Preparing the file…");
+ try{const r=await fetch(location.href.split("#")[0],{cache:"no-store"});if(!r.ok)throw 0;const src=withData(await r.text());if(!src)throw 0;
+  const url=URL.createObjectURL(new Blob([src],{type:"text/html"}));const a=document.createElement("a");a.href=url;a.download="index.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+  msg("Downloaded index.html. Upload it to your website to replace the old one.")}
+ catch(e){msg("Download works once the site is online at its own address (like GitHub Pages). Your changes are still saved in this browser.")}});
 ghStatus();
 
-$("#dl").addEventListener("click",async()=>{
- const msg=$("#editmsg");msg.textContent="Preparing the file…";
- try{const r=await fetch(location.href.split("#")[0],{cache:"no-store"});if(!r.ok)throw 0;let src=await r.text();
-  const json=JSON.stringify(BOX).replace(/</g,"\\u003c");
-  const re=/(<script type="application\/json" id="boxdata">)[\s\S]*?(<\/script>)/;if(!re.test(src))throw 0;
-  src=src.replace(re,(m,a,b)=>a+json+b);
-  const url=URL.createObjectURL(new Blob([src],{type:"text/html"}));const a=document.createElement("a");a.href=url;a.download="index.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
-  msg.textContent="Downloaded index.html. Upload it to your website to replace the old one, so everyone sees your changes.";}
- catch(e){msg.textContent="Download works once the site is online at its own address (like GitHub Pages). Your changes are still saved in this browser.";}
-});
-const wordList=()=>`<ul class="list">${WORDS.map((w,i)=>`<li class="${i?"":"now"}">${i?"":`<span class="tag y">${t("This week","本週")}</span>`}<h3 style="margin-top:8px">${esc(w.word)}<span class="tr">${esc(w.zh)}</span></h3><div class="meta">${esc(w.week)} · ${esc(w.pos)}</div><p style="margin:.4em 0 0">“${esc(w.sentence)}”<span class="tr">${esc(w.sentenceZh)}</span></p></li>`).join("")}</ul>`;
-
-/* ---------- home cards (editable in Edit mode) ---------- */
-const HOME_LINKS=[["#practice-corner","All words →","所有單字"],["#english-hub","All highlights →","所有亮點"],["#english-hub","See more →","看更多"]];
-const homeCards=()=>{if(!Array.isArray(BOX.home)||BOX.home.length!==3)BOX.home=[
- {label:"Word of the Week",title:(WORDS[0]||{}).word||"",img:"",text:"“"+((WORDS[0]||{}).sentence||"")+"”"},
- {label:"Classroom Highlight",title:HIGHLIGHT.title,img:"",text:HIGHLIGHT.text},
- {label:"Spotlight",title:"",img:"",text:""}];return BOX.home};
-function homeHtml(){const c=homeCards();
- return `<div class="rounds" style="margin-top:30px">${c.map((b,i)=>`<article class="rnd">
-  <div class="pic" ${editing?`data-hpick="${i}" role="button" tabindex="0" aria-label="Choose a photo"`:playAttr(b)}>${picInner(b)}</div>
-  ${editing?`<input class="hin lab" data-hf="label" data-hi="${i}" value="${esc(b.label)}" placeholder="Sub-title" aria-label="Sub-title">
-   <input class="hin ttl" data-hf="title" data-hi="${i}" value="${esc(b.title)}" placeholder="Title" aria-label="Title">
-   <textarea class="hin" data-hf="text" data-hi="${i}" placeholder="Type your text here…" aria-label="Text">${esc(b.text)}</textarea>
-   <input class="hin vid" data-hf="video" data-hi="${i}" value="${esc(b.video||"")}" placeholder="YouTube link (optional)" aria-label="YouTube link">`
-   :`<div class="lab">${esc(b.label)}</div><h3>${esc(b.title)}</h3><p class="txt">${esc(b.text)}</p>`}
-  <a class="more" href="${HOME_LINKS[i][0]}">${t(HOME_LINKS[i][1],HOME_LINKS[i][2])}</a></article>`).join("")}</div>`}
-main.addEventListener("change",e=>{if(e.target.closest("[data-vid]")){saveDraft();rerenderBoxes()}else if(e.target.closest("[data-hf=video]")){saveDraft();render(true)}});
-main.addEventListener("input",e=>{const f=e.target.closest("[data-hf]");if(!f)return;homeCards()[+f.dataset.hi][f.dataset.hf]=f.dataset.hf==="video"?f.value.trim():f.value;clearTimeout(tt);tt=setTimeout(saveDraft,500)});
-main.addEventListener("click",e=>{if(!editing)return;const p=e.target.closest("[data-hpick]");if(!p)return;pickHome=+p.dataset.hpick;pickIdx=-1;$("#picker").value="";$("#picker").click()});
-let pickHome=-1;
-
-
-/* ---------- video player ---------- */
-const lbx=$("#lightbox");
-function playVideo(id){lbx.querySelector(".lbv").innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${esc(id)}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;lbx.hidden=false;lbx.querySelector(".lbx-close").focus()}
-function closeVideo(){lbx.hidden=true;lbx.querySelector(".lbv").innerHTML=""}
-main.addEventListener("click",e=>{if(editing)return;const p=e.target.closest("[data-play]");if(p)playVideo(p.dataset.play)});
-main.addEventListener("keydown",e=>{const p=e.target.closest("[data-play]");if(p&&!editing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();playVideo(p.dataset.play)}});
-lbx.addEventListener("click",e=>{if(e.target===lbx||e.target.closest(".lbx-close"))closeVideo()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!lbx.hidden)closeVideo()});
-
-function render(keep){
- const id=(location.hash||"#overview").slice(1)||"overview";
- const {top,sub}=find(id);
- $("#tabs").innerHTML=SITE.map(x=>`<a href="#${x.id}" class="${x===top?"on":""}">${t(x.name,x.zh)}</a>`).join("");
- $("#sub").innerHTML=top.subs?`<div class="wrap">${top.subs.map(s=>`<a href="#${s.id}" class="${s===sub?"on":""}">${t(s.name,s.zh)}</a>`).join("")}</div>`:"";
- if(top.id==="overview"||!sub)curPage=null;
- if(top.id==="overview"){main.innerHTML=overview();}
- else if(!sub){main.innerHTML=head(top,null)+`<section class="band"><div class="wrap rounds tilesr">${top.subs.map(s=>`<a class="rnd" href="#${s.id}"><div class="pic ico">${TICON[s.id]||TICON.def}</div><h3>${t(s.name,s.zh)}</h3><p class="txt">${t(s.d,s.dz)}</p><span class="more">${t(...VIEW)}</span></a>`).join("")}</div></section>`;}
- else{curPage=sub.id;main.innerHTML=head(top,sub)+`<section class="band"><div class="wrap">${boxesHtml(sub.id)}${sub.id==="practice-corner"?`<h2 style="margin-top:48px">${t("All Words of the Week","所有每週單字")}</h2>`+wordList():""}</div></section>`;}
- document.title=(sub?sub.name:top.id==="overview"?"Wanlai English Hub":top.name)+(top.id==="overview"?"":" · Wanlai English Hub");
- if(!keep){window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0))}
-}
-
-let lang="en";
-function tick(){
- const c=$("#clock");if(!c)return;const now=new Date(),tz="Asia/Taipei";
- c.textContent=now.toLocaleTimeString("en-US",{timeZone:tz,hour:"numeric",minute:"2-digit"});
- $("#today").innerHTML=esc(now.toLocaleDateString("en-US",{timeZone:tz,weekday:"short",month:"short",day:"numeric"})+" · Beidou")+`<span class="tr">${esc(now.toLocaleDateString("zh-TW",{timeZone:tz,year:"numeric",month:"long",day:"numeric",weekday:"long"}))} · 北斗</span>`;
-}
-setInterval(tick,1000);
-
-let wxCache=null;
-async function weather(){
- const T=$("#wxT"),D=$("#wxD"),F=$("#wxF");if(!T)return;
- const show=d=>{const cur=d.current,dl=d.daily,c=wxCodes[cur.weather_code]||["Weather","天氣"];T.textContent=Math.round(cur.temperature_2m)+"°C";
-  D.innerHTML=t(c[0],c[1]);
-  const hi=Math.round(dl.temperature_2m_max[0]),lo=Math.round(dl.temperature_2m_min[0]),rp=dl.precipitation_probability_max[0]??0;
-  F.innerHTML=t(`· High ${hi}° · Low ${lo}° · Rain ${rp}%`,`最高 ${hi}° · 最低 ${lo}° · 降雨 ${rp}%`);};
- if(wxCache)return show(wxCache);
- try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=23.866&longitude=120.517&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTaipei&forecast_days=1");
-  if(!r.ok)throw 0;wxCache=await r.json();show(wxCache);}
- catch(e){T.textContent="—";D.innerHTML=t("shows when the site is online","網站上線後顯示");
-  F.innerHTML=`· <a href="https://www.cwa.gov.tw/">${t("CWA forecast ↗","中央氣象署")}</a>`;}
-}
-
-function setLang(v){lang=v==="zh"?"zh":"en";document.documentElement.classList.toggle("zh",lang==="zh");
- document.querySelectorAll(".langmenu button").forEach(b=>b.setAttribute("aria-checked",b.dataset.v===lang));}
+/* ---------- language ---------- */
+function setLang(v){document.documentElement.classList.toggle("zh",v==="zh");document.querySelectorAll(".langmenu button").forEach(b=>b.setAttribute("aria-checked",b.dataset.v===(v==="zh"?"zh":"en")))}
 const closeMenus=()=>document.querySelectorAll("[data-langbox]").forEach(bx=>{bx.querySelector(".langmenu").hidden=true;bx.querySelector(".langbtn").setAttribute("aria-expanded","false")});
 document.querySelectorAll("[data-langbox]").forEach(bx=>{const btn=bx.querySelector(".langbtn"),menu=bx.querySelector(".langmenu");
- btn.addEventListener("click",e=>{e.stopPropagation();const open=menu.hidden;closeMenus();menu.hidden=!open;btn.setAttribute("aria-expanded",String(open));});
- menu.addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;setLang(b.dataset.v);closeMenus();btn.focus();});});
+ btn.addEventListener("click",e=>{e.stopPropagation();const open=menu.hidden;closeMenus();menu.hidden=!open;btn.setAttribute("aria-expanded",String(open))});
+ menu.addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;setLang(b.dataset.v);closeMenus();btn.focus()})});
 document.addEventListener("click",closeMenus);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenus()});
 setLang("en");
 
-if(LOGO&&imgOk(LOGO))document.querySelectorAll("[data-logo]").forEach(el=>{el.classList.add("has");const i=document.createElement("img");i.src=LOGO;i.alt="Wanlai Elementary School logo";el.appendChild(i)});
+applyLook();renderGate();
 
-window.addEventListener("hashchange",()=>render());
-render();
-
-const gate=$("#gate");let seen=false;try{seen=sessionStorage.getItem("ta-welcome")==="1"}catch(e){}
-if(!seen){gate.hidden=false;$("#enter").focus();}
-$("#enter").addEventListener("click",()=>{gate.hidden=true;try{sessionStorage.setItem("ta-welcome","1")}catch(e){}});
-
+/* ---------- views (owner) ---------- */
 async function showViews(){const v=$("#views");v.hidden=false;
  if(!(GOATCOUNTER&&/^[a-z0-9-]+$/.test(GOATCOUNTER))){v.textContent="Views: set up GoatCounter";return}
  v.textContent="Views: …";
  try{const r=await fetch(`https://${GOATCOUNTER}.goatcounter.com/counter/TOTAL.json`);if(!r.ok)throw 0;const d=await r.json();v.textContent="Website views: "+String(d.count??"—")}
  catch(e){v.textContent="Views: open your GoatCounter dashboard"}}
-$("#editlink").addEventListener("click",showViews);
-if(GOATCOUNTER&&/^[a-z0-9-]+$/.test(GOATCOUNTER)){const s=document.createElement("script");s.async=true;s.src="//gc.zgo.at/count.js";s.dataset.goatcounter=`https://${GOATCOUNTER}.goatcounter.com/count`;document.body.appendChild(s);}
+if(GOATCOUNTER&&/^[a-z0-9-]+$/.test(GOATCOUNTER)){const s=document.createElement("script");s.async=true;s.src="//gc.zgo.at/count.js";s.dataset.goatcounter=`https://${GOATCOUNTER}.goatcounter.com/count`;document.body.appendChild(s)}
+
+window.addEventListener("hashchange",()=>render());
+render();
+
+const gate=$("#gate");let seen=false;try{seen=sessionStorage.getItem("ta-welcome")==="1"}catch(e){}
+if(!seen){gate.hidden=false;$("#enter").focus()}
+$("#enter").addEventListener("click",()=>{gate.hidden=true;try{sessionStorage.setItem("ta-welcome","1")}catch(e){}});
 }
 </script>
 </body>
