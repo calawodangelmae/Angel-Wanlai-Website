@@ -813,12 +813,12 @@ function blockHtml(b,i,key){const home=key==="home",bp=`B|${key}|${i}|`;
   ${home&&(editing||b.label)?`<div class="lab">${EZ(bp+"label",bp+"labelZh",{ph:"Sub-title"})}</div>`:""}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p class="txt">${EZ(bp+"text",bp+"textZh",{ph:"Text",ml:1})}</p>`:""}
   ${reqHtml(b)}${home&&b.to?`<a class="more" href="#${esc(linkTo(b.to))}"${BK("btn|more")}>${editing?EZ(bp+"more",bp+"moreZh",{ph:"See more →"}):t(b.more||"See more →",b.moreZh)}</a>`:""}</article>`}
 function blocksHtml(key){const L=listFor(key)||[];
- return `<div class="rounds" data-list="${esc(key)}">${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
+ return `<div class="rounds" data-list="${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box here","big"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
 
 /* ---------- settings bubbles (⚙) ---------- */
 const SHAPES=[["circle","Circle",'<i style="width:18px;height:18px;border-radius:50%"></i>'],["rounded","Rounded square",'<i style="width:18px;height:18px;border-radius:5px"></i>'],["wide","Wide (video)",'<i style="width:24px;height:14px;border-radius:4px"></i>'],["tall","Tall",'<i style="width:14px;height:20px;border-radius:4px"></i>']];
 function popHtml(sig){const [kind,a,b]=sig.split("|");
- if(kind==="add")return `<div class="pophd">Add a box</div><div class="popbtns two"><button type="button" class="mini big" data-act="badd" data-key="${esc(a)}">${ICON.photo}<span>Picture box</span></button><button type="button" class="mini big" data-act="taddt" data-key="${esc(a)}"><b style="font:700 22px var(--serif)">T</b><span>Text box</span></button></div>`;
+ if(kind==="add"||kind==="addstart"){const ps=kind==="addstart"?' data-pos="start"':"";return `<div class="pophd">${kind==="addstart"?"Add a box at the beginning":"Add a box at the end"}</div><div class="popbtns two"><button type="button" class="mini big" data-act="badd" data-key="${esc(a)}"${ps}>${ICON.photo}<span>Picture box</span></button><button type="button" class="mini big" data-act="taddt" data-key="${esc(a)}"${ps}><b style="font:700 22px var(--serif)">T</b><span>Text box</span></button></div>`}
  if(kind==="box"){const L=listFor(a),i=+b,x=L&&L[i];if(!x)return "";const m=validMedia(x.media),home=a==="home";
   return `<div class="pophd">${x.kind==="text"?"Text box":"Picture box"}</div>
   ${x.kind==="text"?"":`<div class="poprow"><span class="plab">Shape</span><div class="segs">${SHAPES.map(([v,l,ic])=>`<button type="button" class="seg${(x.shape||"circle")===v?" on":""}" data-act="bshape" data-v="${v}" title="${l}" aria-label="${l}">${ic}</button>`).join("")}</div></div>
@@ -1047,8 +1047,9 @@ document.addEventListener("click",e=>{
  if(act==="themereset"){DATA.theme=clone(DEFAULT.theme);applyTheme();saveDraft();renderPop();msg("Colors are back to the original.");return}
  if(act==="logoimg0"){DATA.logo="";saveDraft();render(true);return}
  if(act==="taddt"||act==="badd"){const key=ba.dataset.key,L=listFor(key);if(!L)return;
-  L.push(act==="taddt"?{kind:"text",title:"",text:"",media:[]}:key==="home"?{label:"",title:"",text:"",media:[],to:"english-hub",more:"See more →"}:BX("",""));
-  closePop();saveDraft();render(true);const f=document.querySelector(`[data-e="B|${key}|${L.length-1}|title"]`);if(f){f.scrollIntoView({block:"center"});f.focus()}return}
+  const nb=act==="taddt"?{kind:"text",title:"",text:"",media:[]}:key==="home"?{label:"",title:"",text:"",media:[],to:"english-hub",more:"See more →"}:BX("",""),atStart=ba.dataset.pos==="start";
+  if(atStart)L.unshift(nb);else L.push(nb);
+  closePop();saveDraft();render(true);const f=document.querySelector(`[data-e="B|${key}|${atStart?0:L.length-1}|title"]`);if(f){f.scrollIntoView({block:"center"});f.focus()}return}
  const art=ba.closest("[data-key]");if(!art)return;const key=art.dataset.key,i=+art.dataset.i,L=listFor(key);if(!L||!L[i])return;const b=L[i];b.media=validMedia(b.media);const j=+ba.dataset.j;
  const sig=`box|${key}|${i}`;
  if(act==="bleft"){move(L,i,-1);if(popState===sig&&i>0)popState=`box|${key}|${i-1}`}
