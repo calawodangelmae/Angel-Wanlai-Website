@@ -503,6 +503,16 @@ body.dragging,body.dragging *{user-select:none;cursor:grabbing!important}
 body.dragging .chgo{opacity:0!important}
 .rounds.al-left{justify-content:flex-start!important}
 .rounds.al-right{justify-content:flex-end!important}
+
+.rounds.gridm{display:grid!important;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:40px 22px;align-items:start;justify-items:center;grid-auto-flow:row dense}
+.rounds.gridm>.rnd{width:100%;max-width:100%}
+.rounds.gridm>.tblock{width:100%}
+.rounds.gridm>.addwrap{align-self:center}
+.dgrid{position:fixed;inset:0;z-index:87;pointer-events:none}
+.gcell{position:fixed;border:1.5px dashed rgba(31,78,156,.35);border-radius:14px;background:rgba(234,241,251,.25)}
+.gcell.on{border:2.5px solid var(--blue);background:rgba(31,78,156,.12);box-shadow:0 0 0 4px rgba(31,78,156,.12)}
+@media(max-width:700px){.rounds.gridm{grid-template-columns:repeat(2,minmax(0,1fr))}.rounds.gridm>*{grid-row:auto!important;grid-column:auto!important}}
+@media(max-width:430px){.rounds.gridm{grid-template-columns:1fr}}
 .gate .gtip{margin:0;max-width:44ch}
 /* floating edit bar */
 .editbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:55;display:flex;flex-direction:column;align-items:center;gap:10px;width:max-content;max-width:calc(100vw - 20px)}
@@ -816,6 +826,10 @@ const EZ=(p,pz,o={})=>E(p,o)+ZE(pz,o);
 const UE=k=>EZ("ui."+k+".0","ui."+k+".1",{ph:(DEFAULT.ui[k]||[""])[0]||"Text"});
 const MOVEI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>';
 const dragB=()=>`<button type="button" class="eb drag" data-drag title="Drag to move" aria-label="Drag to move">${MOVEI}</button>`;
+const colsOf=key=>{const v=key==="home"?DATA.homeCols:key.startsWith("head:")?0:(findPath(key)||[]).slice(-1)[0]?.cols;return v>=2&&v<=5?+v:0};
+const spanOf=(wide,size,cols)=>Math.min(cols,wide?(size==="l"?3:size==="s"?1:2):1);
+const gSty=(g,span)=>g?`grid-column:${g.c} / span ${span};grid-row:${g.r};`:`grid-column:span ${span};`;
+const gOrder=(arr)=>arr.map((v,i)=>i).sort((a,b)=>{const A=arr[a].gpos,B=arr[b].gpos;return (A?A.r*10+A.c:1e6+a)-(B?B.r*10+B.c:1e6+b)});
 const ALN=v=>({left:" al-left",right:" al-right"})[v]||"";
 const gearB=sig=>`<button type="button" class="eb" data-pop="${esc(sig)}" title="Settings" aria-label="Settings">${GEAR}</button>`;
 const minusB=(attrs,ak)=>`<button type="button" class="eb minus${armed===ak?" armed":""}" ${attrs} title="Delete" aria-label="Delete">${armed===ak?"Delete?":"−"}</button>`;
@@ -829,13 +843,14 @@ const reqLink=b=>`mailto:${OWNER_EMAIL}?subject=${encodeURIComponent("Request fo
 const reqHtml=b=>b.request?`<div class="req"><a class="btn y" href="${reqLink(b)}"${BK("btn|req")}>${UE("requestCopy")}</a><p class="note">${UE("requestNote")}</p></div>`:"";
 function blockHtml(b,i,key){const home=key==="home",bp=`B|${key}|${i}|`;
  const tools=editing?`<div class="etools">${key.startsWith("head:")?"":dragB()}${gearB(`box|${key}|${i}`)}${minusB('data-act="bdel"',"b"+key+i)}</div>`:"";
- const at=`data-key="${esc(key)}" data-i="${i}" data-di="${i}"`;
+ const gc=colsOf(key),at=`data-key="${esc(key)}" data-i="${i}" data-di="${i}"${gc?` style="${gSty(b.gpos,spanOf(/shp-wide/.test(shapeCls(b)),b.size,gc))}"`:""}`;
  if(b.kind==="text")return `<article class="tblock" ${at}>${tools}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p>${EZ(bp+"text",bp+"textZh",{ph:"Type your text here…",ml:1})}</p>`:""}${reqHtml(b)}</article>`;
  return `<article class="rnd${shapeCls(b)}${sizeCls(b.size)}" ${at}>${tools}${mediaHtml(b.media,key+":"+i)}
   ${home&&(editing||b.label)?`<div class="lab">${EZ(bp+"label",bp+"labelZh",{ph:"Sub-title"})}</div>`:""}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p class="txt">${EZ(bp+"text",bp+"textZh",{ph:"Text",ml:1})}</p>`:""}
   ${reqHtml(b)}${home&&b.to?`<a class="more" href="#${esc(linkTo(b.to))}"${BK("btn|more")}>${editing?EZ(bp+"more",bp+"moreZh",{ph:"See more →"}):t(b.more||"See more →",b.moreZh)}</a>`:""}</article>`}
 function blocksHtml(key){const L=listFor(key)||[];
- return `<div class="rounds${ALN(key==="home"?DATA.homeAlign:(findPath(key)||[]).slice(-1)[0]?.align)}" data-list="${esc(key)}" data-dnd="b|${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box at the beginning","atstart"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
+ const gc=colsOf(key),st=editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box at the beginning","atstart"):"";
+ return `${gc?st:""}<div class="rounds${gc?" gridm":ALN(key==="home"?DATA.homeAlign:(findPath(key)||[]).slice(-1)[0]?.align)}"${gc?` style="--cols:${gc}"`:""} data-list="${esc(key)}" data-dnd="b|${esc(key)}">${gc?"":st}${(gc?gOrder(L):L.map((b,i)=>i)).map(i=>blockHtml(L[i],i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
 
 /* ---------- settings bubbles (⚙) ---------- */
 const SHAPES=[["circle","Circle",'<i style="width:18px;height:18px;border-radius:50%"></i>'],["rounded","Rounded square",'<i style="width:18px;height:18px;border-radius:5px"></i>'],["wide","Wide (video)",'<i style="width:24px;height:14px;border-radius:4px"></i>'],["tall","Tall",'<i style="width:14px;height:20px;border-radius:4px"></i>']];
@@ -857,11 +872,13 @@ function popHtml(sig){const [kind,a,b]=sig.split("|");
   ${p.type==="inbox"?"":`<div class="poprow"><span class="plab">Tile shape</span><div class="segs">${SHAPES.map(([v,l,ic])=>`<button type="button" class="seg${(p.tileShape||"circle")===v?" on":""}" data-pact="pshape" data-v="${v}" title="${l}" aria-label="${l}">${ic}</button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Tile size</span>${sizeSegs(p.tileSize,"data-pact")}</div>
   <div class="poprow"><span class="plab">Tile picture</span><div class="popbtns"><button type="button" class="mini" data-pact="cover">Choose…</button>${p.img?`<button type="button" class="mini" data-pact="nocover">Remove</button>`:""}</div></div>
+  <div class="poprow"><span class="plab">Columns (drag anywhere)</span><div class="segs">${[[0,"Auto"],[2,"2"],[3,"3"],[4,"4"],[5,"5"]].map(([v,l])=>`<button type="button" class="seg wide${(+(p.cols)||0)===v?" on":""}" data-pact="pcols" data-v="${v}">${l}</button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Line up tiles &amp; boxes</span><div class="segs">${[["left","Left","M4 6h10M4 12h16M4 18h8"],["center","Center","M7 6h10M4 12h16M8 18h8"],["right","Right","M10 6h10M4 12h16M12 18h8"]].map(([v,l,d])=>`<button type="button" class="seg${(p.align||"center")===v?" on":""}" data-pact="palign" data-v="${v}" title="${l}" aria-label="${l}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="${d}"/></svg></button>`).join("")}</div></div>
   <label class="poprow chk"><input type="checkbox" data-chk="P|${esc(a)}|words" ${p.words?"checked":""}> Show the “Words of the Week” list</label>
   <div class="poprow"><button type="button" class="mini" data-pact="addsub">+ Add a page inside this page</button></div>`}
   <div class="poprow us"><button type="button" class="mini" data-act="undo" ${HIST.length?"":"disabled"}>↶ Undo</button><button type="button" class="mini sv" data-act="psave">✓ Save</button></div>`}
  if(kind==="hero")return `<div class="pophd">Overview settings</div>
+  <div class="poprow"><span class="plab">Columns (drag anywhere)</span><div class="segs">${[[0,"Auto"],[2,"2"],[3,"3"],[4,"4"],[5,"5"]].map(([v,l])=>`<button type="button" class="seg wide${(+(DATA.homeCols)||0)===v?" on":""}" data-act="hcols" data-v="${v}">${l}</button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Line up the boxes</span><div class="segs">${[["left","Left","M4 6h10M4 12h16M4 18h8"],["center","Center","M7 6h10M4 12h16M8 18h8"],["right","Right","M10 6h10M4 12h16M12 18h8"]].map(([v,l,d])=>`<button type="button" class="seg${(DATA.homeAlign||"center")===v?" on":""}" data-act="halign" data-v="${v}" title="${l}" aria-label="${l}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="${d}"/></svg></button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Background picture</span><div class="popbtns"><button type="button" class="mini" data-act="heroimg">Change…</button>${DATA.heroImg?`<button type="button" class="mini" data-act="heroimg0">Original</button>`:""}</div></div>
   <div class="poprow"><span class="plab">School logo</span><div class="popbtns"><button type="button" class="mini" data-act="logoimg">Change…</button>${DATA.logo?`<button type="button" class="mini" data-act="logoimg0">Original</button>`:""}</div></div>
@@ -947,7 +964,8 @@ const CAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 const tileImg=p=>{const has=p.img&&imgOk(p.img),ed=editing?` data-pact="cover" data-page="${esc(p.id)}" role="button" tabindex="0" title="Change picture"`:"";
  return `<div class="pic${has?"":" ico"}${editing?" chg":""}"${ed}>${has?`<img src="${esc(p.img)}" alt="">`:(TICON[p.id]||TICON.def)}${editing?`<span class="chgo">${CAM}<b>${has?"Change picture":"Add picture"}</b></span>`:""}</div>`};
 function tilesHtml(p){if(!p.children.length)return "";
- return `<div class="rounds tilesr${ALN(p.align)}" data-dnd="p|${esc(p.id)}">${p.children.map((c,ci)=>`<a data-di="${ci}" class="rnd${({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[c.tileShape]||""}${sizeCls(c.tileSize)}" href="#${esc(c.id)}">${editing?`<div class="etools">${dragB()}${gearB("page|"+c.id)}${minusB(`data-pact="pdel" data-page="${esc(c.id)}"`,"p"+c.id)}</div>`:""}${tileImg(c)}<h3>${EZ("P|"+c.id+"|name","P|"+c.id+"|zh",{ph:"Page name"})}</h3>${editing||c.desc?`<p class="txt">${EZ("P|"+c.id+"|desc","P|"+c.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}<span class="more"${BK("btn|viewpage")}>${UE("viewPage")}</span></a>`).join("")}${editing?plusB(`data-pact="addsub" data-page="${esc(p.id)}"`,"Add a page inside","big"):""}</div>`}
+ const gc=colsOf(p.id);
+ return `<div class="rounds tilesr${gc?" gridm":ALN(p.align)}"${gc?` style="--cols:${gc}"`:""} data-dnd="p|${esc(p.id)}">${(gc?gOrder(p.children):p.children.map((c,i)=>i)).map(ci=>[p.children[ci],ci]).map(([c,ci])=>`<a data-di="${ci}"${gc?` style="${gSty(c.gpos,spanOf(c.tileShape==="wide",c.tileSize,gc))}"`:""} class="rnd${({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[c.tileShape]||""}${sizeCls(c.tileSize)}" href="#${esc(c.id)}">${editing?`<div class="etools">${dragB()}${gearB("page|"+c.id)}${minusB(`data-pact="pdel" data-page="${esc(c.id)}"`,"p"+c.id)}</div>`:""}${tileImg(c)}<h3>${EZ("P|"+c.id+"|name","P|"+c.id+"|zh",{ph:"Page name"})}</h3>${editing||c.desc?`<p class="txt">${EZ("P|"+c.id+"|desc","P|"+c.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}<span class="more"${BK("btn|viewpage")}>${UE("viewPage")}</span></a>`).join("")}${editing?plusB(`data-pact="addsub" data-page="${esc(p.id)}"`,"Add a page inside","big"):""}</div>`}
 function headHtml(path){const p=path[path.length-1],par=path[path.length-2];
  const pills=path.length<3||(!editing&&par.children.length<2)?"":par.hidePills?(editing?`<div class="pillrow"><button type="button" class="mini" data-act="pillshow" data-page="${esc(par.id)}">+ Show the page buttons here</button></div>`:""):`<nav class="pillrow" aria-label="More pages">${par.children.map(c=>`<span class="pillw"><a href="#${esc(c.id)}" class="${c===p?"on":""}"${BK("tab|"+c.id)}>${t(c.name||"New page",c.zh)}</a>${editing?`<span class="pillt"><button type="button" class="pillg" data-pop="page|${esc(c.id)}" title="Settings" aria-label="Settings for this page">${GEAR}</button><button type="button" class="pillx${armed==="p"+c.id?" armed":""}" data-pact="pdel" data-page="${esc(c.id)}" title="Delete this page" aria-label="Delete this page">${armed==="p"+c.id?"Delete?":"×"}</button></span>`:""}</span>`).join("")}${editing?`<button type="button" class="plus sm" data-pact="addsub" data-page="${esc(par.id)}" title="Add a page here" aria-label="Add a page here">+</button><button type="button" class="eb minus pillhide" data-act="pillhide" data-page="${esc(par.id)}" title="Hide this row of buttons" aria-label="Hide this row of buttons">−</button>`:""}</nav>`;
  const back=editing?`<div class="back" role="button" tabindex="0" data-up="${par?esc(par.id):"overview"}"${BK("btn|back")}>${BACK}${UE("back")}</div>`:`<button class="back" type="button" data-up="${par?esc(par.id):"overview"}" aria-label="Go back"${BK("btn|back")}>${BACK}${U("back")}</button>`;
@@ -1031,13 +1049,40 @@ window.addEventListener("scroll",()=>{if(fmtEl&&!$("#fmt").hidden)showFmt(fmtEl)
 let drag=null;
 function dragMove(e){if(!drag)return;const d=drag;d.ghost.style.left=(e.clientX-d.dx)+"px";d.ghost.style.top=(e.clientY-d.dy)+"px";
  if(e.clientY<90)scrollBy(0,-14);else if(e.clientY>innerHeight-110)scrollBy(0,14);
+ if(d.grid)return gridMove(e);
  let best=null,bd=1e9;for(const it of d.items){if(it===d.item)continue;const r=it.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const dist=Math.hypot((e.clientX-cx)*.8,(e.clientY-cy)*1.2);if(dist<bd){bd=dist;best={it,r,cx,cy}}}
  if(!best){d.to=null;d.line.hidden=true;d.hline.hidden=true;return}
  const after=e.clientX>best.cx,gap=16;const x=after?best.r.right+gap:best.r.left-gap;
  Object.assign(d.line.style,{left:(x-2)+"px",top:best.r.top+"px",height:best.r.height+"px"});d.line.hidden=false;
  const cr=d.cont.getBoundingClientRect();Object.assign(d.hline.style,{left:cr.left+"px",width:cr.width+"px",top:(best.r.top+Math.min(best.r.height,best.r.width)/2)+"px"});d.hline.hidden=false;
  let to=+best.it.dataset.di+(after?1:0);if(d.from<to)to--;d.to=to}
-function dragEnd(){if(!drag)return;const d=drag;drag=null;d.ghost.remove();d.line.remove();d.hline.remove();d.vline.remove();d.item.classList.remove("dsrc");d.cont.classList.remove("dcont");document.body.classList.remove("dragging");
+function gridGeom(cont){const cs=getComputedStyle(cont),r=cont.getBoundingClientRect(),num=s=>s.split(" ").map(parseFloat).filter(n=>!isNaN(n));
+ const cw=num(cs.gridTemplateColumns),rh=num(cs.gridTemplateRows),cg=parseFloat(cs.columnGap)||0,rg=parseFloat(cs.rowGap)||0;
+ const xs=[];let x=r.left+(parseFloat(cs.paddingLeft)||0);cw.forEach(w=>{xs.push([x,x+w]);x+=w+cg});
+ const ys=[];let y=r.top+(parseFloat(cs.paddingTop)||0);rh.forEach(h=>{ys.push([y,y+h]);y+=h+rg});
+ ys.push([y,y+Math.max(rh.length?rh[rh.length-1]:200,160)]);return {xs,ys,cg,rg}}
+function itemSpan(cont,el){const m=/span (\d+)/.exec(el.style.gridColumn||"");return m?+m[1]:1}
+function cellOf(G,el,span){const r=el.getBoundingClientRect(),cx=r.left+r.width/2;let c=0,bd=1e9;for(let i=0;i+span<=G.xs.length;i++){const mid=(G.xs[i][0]+G.xs[i+span-1][1])/2,dd=Math.abs(mid-cx);if(dd<bd){bd=dd;c=i}}
+ let rr=0;bd=1e9;G.ys.forEach((y,j)=>{const dd=Math.abs(y[0]-r.top);if(dd<bd){bd=dd;rr=j}});return {r:rr+1,c:c+1}}
+function gridMove(e){const d=drag,G=gridGeom(d.cont),span=d.span;
+ let c=G.xs.findIndex(([a,b])=>e.clientX<b+G.cg/2);if(c<0)c=G.xs.length-1;c=Math.min(c,G.xs.length-span);
+ let r=G.ys.findIndex(([a,b])=>e.clientY<b+G.rg/2);if(r<0)r=G.ys.length-1;
+ d.cell={r:r+1,c:c+1};
+ d.overlay.innerHTML=G.ys.map(([y0,y1],j)=>G.xs.map(([x0,x1],i)=>`<div class="gcell${j===r&&i>=c&&i<c+span?" on":""}" style="left:${x0}px;top:${y0}px;width:${x1-x0}px;height:${y1-y0}px"></div>`).join("")).join("");
+ d.to=1}
+function gridDrop(d){const [kind,id]=d.cont.dataset.dnd.split("|");const arr=kind==="b"?listFor(id):(findPath(id)||[]).slice(-1)[0]?.children;if(!arr||!d.cell)return;
+ const G=gridGeom(d.cont),cols=G.xs.length,els=[...d.cont.querySelectorAll(":scope>[data-di]")];
+ const pos={},spans={};els.forEach(el=>{const i=+el.dataset.di,s=itemSpan(d.cont,el);spans[i]=s;pos[i]=cellOf(G,el,s)});
+ snap();const src=d.from,old=pos[src];
+ const occ=Object.keys(pos).map(Number).find(i=>i!==src&&pos[i].r===d.cell.r&&pos[i].c===d.cell.c);
+ if(occ!==undefined&&old)pos[occ]={...old};pos[src]={...d.cell};
+ const taken=new Set(),fits=(p,s)=>{if(p.c+s-1>cols)return false;for(let k=0;k<s;k++)if(taken.has(p.r+":"+(p.c+k)))return false;return true},take=(p,s)=>{for(let k=0;k<s;k++)taken.add(p.r+":"+(p.c+k))};
+ const order=[src,...Object.keys(pos).map(Number).filter(i=>i!==src).sort((a,b)=>(pos[a].r-pos[b].r)||(pos[a].c-pos[b].c))];
+ for(const i of order){let p=pos[i],s=spans[i];if(p.c+s-1>cols)p.c=Math.max(1,cols-s+1);while(!fits(p,s)){p.c++;if(p.c+s-1>cols){p.c=1;p.r++}}take(p,s);pos[i]=p}
+ const rows=[...new Set(Object.values(pos).map(p=>p.r))].sort((a,b)=>a-b),rm={};rows.forEach((r,k)=>rm[r]=k+1);
+ for(const i of Object.keys(pos))arr[i].gpos={r:rm[pos[i].r],c:pos[i].c};
+ closePop();saveDraft();render(true);msg("Moved. Click Publish when you’re ready.")}
+function dragEnd(){if(drag&&drag.grid){const d=drag;drag=null;d.ghost.remove();d.overlay.remove();d.item.classList.remove("dsrc");d.cont.classList.remove("dcont");document.body.classList.remove("dragging");if(d.cell)gridDrop(d);return}if(!drag)return;const d=drag;drag=null;d.ghost.remove();d.line.remove();d.hline.remove();d.vline.remove();d.item.classList.remove("dsrc");d.cont.classList.remove("dcont");document.body.classList.remove("dragging");
  if(d.to==null||d.to===d.from)return;const [kind,id]=d.cont.dataset.dnd.split("|");
  const arr=kind==="b"?listFor(id):(findPath(id)||[]).slice(-1)[0]?.children;if(!arr)return;snap();arr.splice(d.to,0,arr.splice(d.from,1)[0]);closePop();saveDraft();render(true);msg("Moved. Click Publish when you’re ready.")}
 document.addEventListener("pointerdown",e=>{if(!editing)return;const h=e.target.closest("[data-drag]");if(!h)return;e.preventDefault();e.stopPropagation();
@@ -1046,7 +1091,8 @@ document.addEventListener("pointerdown",e=>{if(!editing)return;const h=e.target.
  const mk=c=>{const el=document.createElement("div");el.className=c;el.hidden=true;document.body.appendChild(el);return el};
  const cr=cont.getBoundingClientRect(),vline=mk("dvline");Object.assign(vline.style,{left:(cr.left+cr.width/2)+"px",top:cr.top+"px",height:cr.height+"px"});vline.hidden=false;
  item.classList.add("dsrc");cont.classList.add("dcont");document.body.classList.add("dragging");
- drag={item,cont,items:[...cont.querySelectorAll(":scope>[data-di]")],ghost,line:mk("dline"),hline:mk("dhline"),vline,dx:e.clientX-r.left,dy:e.clientY-r.top,from:+item.dataset.di,to:null};dragMove(e)});
+ const grid=cont.classList.contains("gridm");if(grid){vline.remove()}
+ drag={item,cont,items:[...cont.querySelectorAll(":scope>[data-di]")],ghost,line:grid?null:mk("dline"),hline:grid?null:mk("dhline"),vline,dx:e.clientX-r.left,dy:e.clientY-r.top,from:+item.dataset.di,to:null,grid,span:grid?itemSpan(cont,item):1,overlay:grid?(()=>{const o=document.createElement("div");o.className="dgrid";document.body.appendChild(o);return o})():null};dragMove(e)});
 document.addEventListener("pointermove",e=>{if(drag){e.preventDefault();dragMove(e)}},{passive:false});
 document.addEventListener("pointerup",dragEnd);document.addEventListener("pointercancel",dragEnd);
 document.addEventListener("keydown",e=>{if(drag&&e.key==="Escape"){drag.to=null;dragEnd()}});
@@ -1077,6 +1123,7 @@ document.addEventListener("click",e=>{
   if(act==="nocover"){p.img="";saveDraft();render(true)}
   if(act==="pshape"){p.tileShape=pa.dataset.v;saveDraft();render(true)}
   if(act==="psize"){p.tileSize=pa.dataset.v;saveDraft();render(true)}
+  if(act==="pcols"){p.cols=+pa.dataset.v||undefined;saveDraft();render(true);if(p.cols)msg("Grid on: hold ✥ and drag tiles or boxes into any cell. Empty cells make spacing.")}
   if(act==="palign"){p.align=pa.dataset.v==="center"?undefined:pa.dataset.v;saveDraft();render(true)}
   if(act==="pdel"){if(!arm("p"+p.id,pa,"Delete?"))return;closePop();snap();sib.splice(ix,1);saveDraft();const par=path[path.length-2];if(p.id===curId||path.some(x=>x.id===curId)){location.hash="#"+(par?par.id:"overview")}render(true)}
   return}
@@ -1090,6 +1137,7 @@ document.addEventListener("click",e=>{
  if(act==="heroimg"||act==="logoimg"){pick={type:act};const pk=$("#picker");pk.accept="image/*";pk.multiple=false;pk.value="";pk.click();return}
  if(act==="heroimg0"){DATA.heroImg="";saveDraft();render(true);return}
  if(act==="pillhide"||act==="pillshow"){const pa2=findPath(ba.dataset.page);if(pa2){pa2[pa2.length-1].hidePills=act==="pillhide";saveDraft();render(true);msg(act==="pillhide"?"Page buttons hidden. Click “+ Show the page buttons here” to bring them back.":"Page buttons are back.")}return}
+ if(act==="hcols"){DATA.homeCols=+ba.dataset.v||undefined;saveDraft();render(true);return}
  if(act==="halign"){DATA.homeAlign=ba.dataset.v==="center"?undefined:ba.dataset.v;saveDraft();render(true);return}
  if(act==="lookopen"){$("#ebmenu").hidden=true;popState="look";renderPop();return}
  if(act==="bgimg"){pick={type:"bgimg"};const pk=$("#picker");pk.accept="image/*";pk.multiple=false;pk.value="";pk.click();return}
