@@ -484,6 +484,8 @@ body.editing .brand:hover .logo{outline-color:var(--blue)}
 .rounds>.tblock{flex:1 1 100%}
 .rounds>.addwrap{flex:0 0 200px}
 .rnd.shp-wide .pic img{object-fit:cover}
+.rounds>.addwrap.atstart{flex:1 1 100%;flex-direction:row;min-height:0;gap:12px;padding:10px;border:2px dashed #c9d3e2;border-radius:16px;background:rgba(234,241,251,.5)}
+.addwrap.atstart .pcap{font-size:15px;color:var(--blue)}
 .gate .gtip{margin:0;max-width:44ch}
 /* floating edit bar */
 .editbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:55;display:flex;flex-direction:column;align-items:center;gap:10px;width:max-content;max-width:calc(100vw - 20px)}
@@ -813,7 +815,7 @@ function blockHtml(b,i,key){const home=key==="home",bp=`B|${key}|${i}|`;
   ${home&&(editing||b.label)?`<div class="lab">${EZ(bp+"label",bp+"labelZh",{ph:"Sub-title"})}</div>`:""}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p class="txt">${EZ(bp+"text",bp+"textZh",{ph:"Text",ml:1})}</p>`:""}
   ${reqHtml(b)}${home&&b.to?`<a class="more" href="#${esc(linkTo(b.to))}"${BK("btn|more")}>${editing?EZ(bp+"more",bp+"moreZh",{ph:"See more →"}):t(b.more||"See more →",b.moreZh)}</a>`:""}</article>`}
 function blocksHtml(key){const L=listFor(key)||[];
- return `<div class="rounds" data-list="${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box here","big"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
+ return `<div class="rounds" data-list="${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box at the beginning","atstart"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
 
 /* ---------- settings bubbles (⚙) ---------- */
 const SHAPES=[["circle","Circle",'<i style="width:18px;height:18px;border-radius:50%"></i>'],["rounded","Rounded square",'<i style="width:18px;height:18px;border-radius:5px"></i>'],["wide","Wide (video)",'<i style="width:24px;height:14px;border-radius:4px"></i>'],["tall","Tall",'<i style="width:14px;height:20px;border-radius:4px"></i>']];
@@ -922,7 +924,7 @@ const fileB64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>r
 const CAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
 const tileImg=p=>{const has=p.img&&imgOk(p.img),ed=editing?` data-pact="cover" data-page="${esc(p.id)}" role="button" tabindex="0" title="Change picture"`:"";
  return `<div class="pic${has?"":" ico"}${editing?" chg":""}"${ed}>${has?`<img src="${esc(p.img)}" alt="">`:(TICON[p.id]||TICON.def)}${editing?`<span class="chgo">${CAM}<b>${has?"Change picture":"Add picture"}</b></span>`:""}</div>`};
-function tilesHtml(p){if(!p.children.length&&!editing)return "";
+function tilesHtml(p){if(!p.children.length)return "";
  return `<div class="rounds tilesr">${p.children.map(c=>`<a class="rnd${({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[c.tileShape]||""}${sizeCls(c.tileSize)}" href="#${esc(c.id)}">${editing?`<div class="etools">${gearB("page|"+c.id)}${minusB(`data-pact="pdel" data-page="${esc(c.id)}"`,"p"+c.id)}</div>`:""}${tileImg(c)}<h3>${EZ("P|"+c.id+"|name","P|"+c.id+"|zh",{ph:"Page name"})}</h3>${editing||c.desc?`<p class="txt">${EZ("P|"+c.id+"|desc","P|"+c.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}<span class="more"${BK("btn|viewpage")}>${UE("viewPage")}</span></a>`).join("")}${editing?plusB(`data-pact="addsub" data-page="${esc(p.id)}"`,"Add a page inside","big"):""}</div>`}
 function headHtml(path){const p=path[path.length-1],par=path[path.length-2];
  const pills=path.length<3||(!editing&&par.children.length<2)?"":par.hidePills?(editing?`<div class="pillrow"><button type="button" class="mini" data-act="pillshow" data-page="${esc(par.id)}">+ Show the page buttons here</button></div>`:""):`<nav class="pillrow" aria-label="More pages">${par.children.map(c=>`<span class="pillw"><a href="#${esc(c.id)}" class="${c===p?"on":""}"${BK("tab|"+c.id)}>${t(c.name||"New page",c.zh)}</a>${editing?`<span class="pillt"><button type="button" class="pillg" data-pop="page|${esc(c.id)}" title="Settings" aria-label="Settings for this page">${GEAR}</button><button type="button" class="pillx${armed==="p"+c.id?" armed":""}" data-pact="pdel" data-page="${esc(c.id)}" title="Delete this page" aria-label="Delete this page">${armed==="p"+c.id?"Delete?":"×"}</button></span>`:""}</span>`).join("")}${editing?`<button type="button" class="plus sm" data-pact="addsub" data-page="${esc(par.id)}" title="Add a page here" aria-label="Add a page here">+</button><button type="button" class="eb minus pillhide" data-act="pillhide" data-page="${esc(par.id)}" title="Hide this row of buttons" aria-label="Hide this row of buttons">−</button>`:""}</nav>`;
@@ -932,7 +934,7 @@ function headHtml(path){const p=path[path.length-1],par=path[path.length-2];
  return `<section class="pagehead band"><div class="wrap">${tools}${back}${par?`<div class="eyebrow">${t(par.name,par.zh)}</div>`:""}${h1}${editing||p.desc?`<p>${EZ("P|"+p.id+"|desc","P|"+p.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}${(p.headBlocks||[]).map((b,i)=>blockHtml(b,i,"head:"+p.id)).join("")}${editing?`<button type="button" class="mini addtxt" data-act="taddt" data-key="head:${esc(p.id)}">+ Text box</button>`:""}${pills}</div></section>`}
 function pageHtml(path){const p=path[path.length-1];
  const tiles=tilesHtml(p),hasB=p.blocks.length||editing;
- return headHtml(path)+`<section class="band"><div class="wrap">${p.type==="inbox"?inboxHtml()+'<div style="height:40px"></div>':""}${tiles}${tiles&&hasB?'<div style="height:56px"></div>':""}${hasB?blocksHtml(p.id):""}${p.words?`<h2 style="margin-top:56px">${UE("allWords")}</h2>`+wordList():""}</div></section>`}
+ return headHtml(path)+`<section class="band"><div class="wrap">${p.type==="inbox"?inboxHtml()+'<div style="height:40px"></div>':""}${tiles}${tiles&&hasB?'<div style="height:56px"></div>':""}${hasB?blocksHtml(p.id):""}${p.words?`<h2 style="margin-top:56px">${UE("allWords")}</h2>`+wordList():""}${editing&&!p.children.length&&p.type!=="inbox"?`<div style="margin-top:48px;text-align:center"><button type="button" class="mini addtxt" data-pact="addsub" data-page="${esc(p.id)}">+ Add a page inside this page</button></div>`:""}</div></section>`}
 const wordList=()=>`${editing?`<div class="wadd"><button type="button" class="plus" data-act="wadd" title="Add this week’s word" aria-label="Add this week’s word">+</button><span class="pcap">Add this week’s word (it goes on top)</span></div>`:""}<ul class="list">${(DATA.words||[]).map((w,i,a)=>{const W=f=>`W|${i}|${f}`;return `<li class="${i?"":"now"}" data-w="${i}">${editing?`<div class="etools"><button type="button" class="eb" data-act="wup" ${i?"":"disabled"} title="Move up" aria-label="Move up">↑</button><button type="button" class="eb" data-act="wdown" ${i<a.length-1?"":"disabled"} title="Move down" aria-label="Move down">↓</button>${minusB('data-act="wdel"',"w"+i)}</div>`:""}${i?"":`<span class="tag y">${UE("thisWeek")}</span>`}<h3 style="margin-top:8px">${E(W("word"),{ph:"word"})}${ZE(W("zh"))}</h3><div class="meta">${E(W("week"),{ph:"week (e.g. Dec 1–5)"})} · ${E(W("pos"),{ph:"noun / verb / phrase"})}</div><p style="margin:.4em 0 0">“${E(W("sentence"),{ph:"Example sentence"})}”${ZE(W("sentenceZh"))}</p></li>`}).join("")}</ul>`;
 
 /* ---------- overview ---------- */
@@ -1006,7 +1008,7 @@ window.addEventListener("scroll",()=>{if(fmtEl&&!$("#fmt").hidden)showFmt(fmtEl)
 /* ---------- editing actions ---------- */
 let gateEd=false;
 window.__weh={get data(){return DATA},get pop(){return popState}};
-function newPage(parent){const np=PG(slug("new page"),"","","","",[BX("",""),BX("","")],[]);(parent?parent.children:DATA.pages).push(np);saveDraft();closePop();location.hash="#"+np.id;if(curId===np.id)render();msg("New page added. Click “Page name” to name it.")}
+function newPage(parent,atStart){const np=PG(slug("new page"),"","","","",[BX("",""),BX("","")],[]);const arr=parent?parent.children:DATA.pages;if(atStart)arr.unshift(np);else arr.push(np);saveDraft();closePop();location.hash="#"+np.id;if(curId===np.id)render();msg("New page added. Click “Page name” to name it.")}
 function move(arr,i,d){const j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]]}
 document.addEventListener("click",e=>{
  if(!editing)return;
@@ -1021,6 +1023,7 @@ document.addEventListener("click",e=>{
   if(act==="addtop")return newPage(null);
   const pid=pa.dataset.page||pa.closest("[data-page]")?.dataset.page||curId;const path=findPath(pid);
   if(act==="addsub"&&path)return newPage(path[path.length-1]);
+  if(act==="addsubstart"&&path)return newPage(path[path.length-1],true);
   if(!path)return;const p=path[path.length-1],sib=siblingsOf(path),ix=sib.indexOf(p);
   if(act==="pleft"){move(sib,ix,-1);saveDraft();render(true)}
   if(act==="pright"){move(sib,ix,1);saveDraft();render(true)}
