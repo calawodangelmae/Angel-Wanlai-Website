@@ -772,7 +772,8 @@ const arm=(key,el,label)=>{if(armed===key){armed="";clearTimeout(armT);return tr
 
 /* ---------- media (carousel) ---------- */
 const GAL={};
-const OWNER_EMAIL="calawodangelmae@gmail.com";
+const OWNER0="calawodangelmae@gmail.com";
+const ownerEmail=()=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((DATA&&DATA.ownerEmail)||"")?DATA.ownerEmail.trim():OWNER0;
 /* media kinds: img (photo), yt (YouTube), doc (Google Slides/Docs/Drive/Forms/Canva link), pdf (uploaded PDF) */
 function docEmbed(u){u=String(u||"").trim();let m;
  if((m=u.match(/^https:\/\/docs\.google\.com\/presentation\/d\/([\w-]+)/)))return `https://docs.google.com/presentation/d/${m[1]}/embed?start=false&loop=false`;
@@ -845,7 +846,7 @@ const plusB=(attrs,cap,cls="")=>`<div class="addwrap ${cls}"><button type="butto
 const listFor=key=>{if(key==="home")return DATA.home;if(key.startsWith("head:")){const pg=(findPath(key.slice(5))||[]).slice(-1)[0];if(!pg)return null;if(!pg.headBlocks)pg.headBlocks=[];return pg.headBlocks}return (findPath(key)||[]).slice(-1)[0]?.blocks};
 const pageOptions=sel=>[`<option value="overview"${sel==="overview"?" selected":""}>Overview</option>`].concat(allPages().map(({p,depth})=>`<option value="${esc(p.id)}"${p.id===sel?" selected":""}>${"— ".repeat(depth)}${esc(p.name)}</option>`)).join("");
 const shapeCls=b=>validMedia(b.media).some(isDocLike)?" shp-wide":(({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[b.shape]||"");
-const reqLink=b=>`mailto:${OWNER_EMAIL}?subject=${encodeURIComponent("Request for a copy: "+(b.title||"lesson file"))}&body=${encodeURIComponent("Hello Teacher Angel,\n\nMay I please have a copy of \""+(b.title||"this lesson file")+"\"?\n\nMy name:\nI am a (student / parent / teacher):\nWhy I would like it:\n\nThank you!")}`;
+const reqLink=b=>`mailto:${ownerEmail()}?subject=${encodeURIComponent("Request for a copy: "+(b.title||"lesson file"))}&body=${encodeURIComponent("Hello Teacher Angel,\n\nMay I please have a copy of \""+(b.title||"this lesson file")+"\"?\n\nMy name:\nI am a (student / parent / teacher):\nWhy I would like it:\n\nThank you!")}`;
 const reqHtml=b=>b.request?`<div class="req"><a class="btn y" href="${reqLink(b)}"${BK("btn|req")}>${UE("requestCopy")}</a><p class="note">${UE("requestNote")}</p></div>`:"";
 function blockHtml(b,i,key){const home=key==="home",bp=`B|${key}|${i}|`;
  const tools=editing?`<div class="etools">${key.startsWith("head:")?"":dragB()}${gearB(`box|${key}|${i}`)}${minusB('data-act="bdel"',"b"+key+i)}</div>`:"";
@@ -933,7 +934,8 @@ function inboxHtml(){
  <div class="fl">${UE("fMessage")}<div class="hin fake big"></div></div>
  <div class="btn y sendb"${BK("btn|send")}>${UE("fSend")}</div>
  <p class="note" style="margin:0">After sending, visitors see: ${UE("fThanks")}</p></div>
- <p class="note" style="margin-top:14px">Messages are sent to ${OWNER_EMAIL}. The very first message asks you (by email) to activate the form, so send yourself a test message first.</p>`;
+ <div class="pedit" style="margin-top:18px;padding:16px;border-radius:14px"><label class="bl"><b>Messages go to this email:</b><input class="hin" type="email" data-e="ownerEmail" value="${esc(DATA.ownerEmail||OWNER0)}" style="max-width:420px;text-align:left"></label><p class="note" style="margin:8px 0 0">If you change it, send yourself a test message, then click the <b>Activate Form</b> link that FormSubmit emails to the new address (check Spam). To answer a message, just click <b>Reply</b> in your email — it goes straight to the visitor.</p></div>
+ <p class="note" style="margin-top:14px;display:none">Messages are sent to ${ownerEmail()}. The very first message asks you (by email) to activate the form, so send yourself a test message first.</p>`;
  return `<form class="inbox" id="inboxform" novalidate>
  <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
  <label>${U("fName")}<input class="hin" name="name" required maxlength="80" autocomplete="name"></label>
@@ -950,11 +952,11 @@ document.addEventListener("submit",async e=>{const f=e.target.closest("#inboxfor
  if(!name||!email||!message){out.textContent=LT("Please fill in your name, email address and message.","請填寫姓名、電子郵件和訊息。");return}
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){out.textContent=LT("Please check your email address.","請確認電子郵件地址。");return}
  btn.disabled=true;out.textContent=LT("Sending…","傳送中…");
- try{const r=await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+ try{const r=await fetch(`https://formsubmit.co/ajax/${ownerEmail()}`,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
    body:JSON.stringify({name,email,role,message,_subject:`Wanlai English Hub Inbox: message from ${name} (${role})`,_template:"table",_captcha:"false",_replyto:email})});
-  const d=await r.json().catch(()=>({}));if(!r.ok||d.success===false||d.success==="false")throw 0;
+  const d=await r.json().catch(()=>({}));if(/activat/i.test(d.message||"")){out.textContent=LT("Almost ready! This Inbox is waiting to be switched on. Please try again later, or email Teacher Angel at "+ownerEmail()+".","信箱尚未啟用，請稍後再試。");return}if(!r.ok||d.success===false||d.success==="false")throw 0;
   f.reset();out.textContent=LT(UI("fThanks")[0],UI("fThanks")[1])}
- catch(err){out.innerHTML=`Sorry, it couldn’t be sent right now. You can email Teacher Angel at <a href="mailto:${OWNER_EMAIL}">${OWNER_EMAIL}</a>.`}
+ catch(err){out.innerHTML=`Sorry, it couldn’t be sent right now. You can email Teacher Angel at <a href="mailto:${ownerEmail()}">${ownerEmail()}</a>.`}
  finally{btn.disabled=false}});
 
 /* ---------- file uploads to GitHub (PDF) ---------- */
