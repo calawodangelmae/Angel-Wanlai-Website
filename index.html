@@ -486,6 +486,23 @@ body.editing .brand:hover .logo{outline-color:var(--blue)}
 .rnd.shp-wide .pic img{object-fit:cover}
 .rounds>.addwrap.atstart{flex:1 1 100%;flex-direction:row;min-height:0;gap:12px;padding:10px;border:2px dashed #c9d3e2;border-radius:16px;background:rgba(234,241,251,.5)}
 .addwrap.atstart .pcap{font-size:15px;color:var(--blue)}
+
+.eb.drag{cursor:grab;touch-action:none}
+.eb.drag:active{cursor:grabbing}
+.dghost{position:fixed;z-index:90;pointer-events:none;opacity:.88;transform:scale(.96) rotate(-1deg);box-shadow:0 24px 60px rgba(19,41,75,.3);border-radius:20px;background:rgba(255,255,255,.75)}
+.dsrc{opacity:.28;filter:grayscale(.4)}
+.dline{position:fixed;z-index:89;width:4px;border-radius:4px;background:var(--blue);box-shadow:0 0 0 4px rgba(31,78,156,.18);pointer-events:none}
+.dline::before,.dline::after{content:"";position:absolute;left:-5px;width:14px;height:14px;border-radius:50%;background:var(--blue)}
+.dline::before{top:-7px}.dline::after{bottom:-7px}
+.dhline,.dvline{position:fixed;z-index:88;pointer-events:none;border:0 dashed rgba(31,78,156,.45)}
+.dhline{height:0;border-top-width:1.5px}
+.dvline{width:0;border-left-width:1.5px;border-color:rgba(246,185,0,.7)}
+[hidden].dline,[hidden].dhline,[hidden].dvline{display:none}
+.dcont{outline:2px dashed rgba(31,78,156,.25);outline-offset:14px;border-radius:18px}
+body.dragging,body.dragging *{user-select:none;cursor:grabbing!important}
+body.dragging .chgo{opacity:0!important}
+.rounds.al-left{justify-content:flex-start!important}
+.rounds.al-right{justify-content:flex-end!important}
 .gate .gtip{margin:0;max-width:44ch}
 /* floating edit bar */
 .editbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:55;display:flex;flex-direction:column;align-items:center;gap:10px;width:max-content;max-width:calc(100vw - 20px)}
@@ -797,6 +814,9 @@ function E(p,o={}){const v=getV(p);
 const ZE=(p,o={})=>editing?`<span class="tr">${E(p,{ph:"中文 (optional)",ml:o.ml,nostyle:o.nostyle})}</span>`:(getV(p)?`<span class="tr">${E(p,o)}</span>`:"");
 const EZ=(p,pz,o={})=>E(p,o)+ZE(pz,o);
 const UE=k=>EZ("ui."+k+".0","ui."+k+".1",{ph:(DEFAULT.ui[k]||[""])[0]||"Text"});
+const MOVEI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>';
+const dragB=()=>`<button type="button" class="eb drag" data-drag title="Drag to move" aria-label="Drag to move">${MOVEI}</button>`;
+const ALN=v=>({left:" al-left",right:" al-right"})[v]||"";
 const gearB=sig=>`<button type="button" class="eb" data-pop="${esc(sig)}" title="Settings" aria-label="Settings">${GEAR}</button>`;
 const minusB=(attrs,ak)=>`<button type="button" class="eb minus${armed===ak?" armed":""}" ${attrs} title="Delete" aria-label="Delete">${armed===ak?"Delete?":"−"}</button>`;
 const plusB=(attrs,cap,cls="")=>`<div class="addwrap ${cls}"><button type="button" class="plus" ${attrs} title="${esc(cap)}" aria-label="${esc(cap)}">+</button>${cap?`<span class="pcap">${esc(cap)}</span>`:""}</div>`;
@@ -808,14 +828,14 @@ const shapeCls=b=>validMedia(b.media).some(isDocLike)?" shp-wide":(({rounded:" s
 const reqLink=b=>`mailto:${OWNER_EMAIL}?subject=${encodeURIComponent("Request for a copy: "+(b.title||"lesson file"))}&body=${encodeURIComponent("Hello Teacher Angel,\n\nMay I please have a copy of \""+(b.title||"this lesson file")+"\"?\n\nMy name:\nI am a (student / parent / teacher):\nWhy I would like it:\n\nThank you!")}`;
 const reqHtml=b=>b.request?`<div class="req"><a class="btn y" href="${reqLink(b)}"${BK("btn|req")}>${UE("requestCopy")}</a><p class="note">${UE("requestNote")}</p></div>`:"";
 function blockHtml(b,i,key){const home=key==="home",bp=`B|${key}|${i}|`;
- const tools=editing?`<div class="etools">${gearB(`box|${key}|${i}`)}${minusB('data-act="bdel"',"b"+key+i)}</div>`:"";
- const at=`data-key="${esc(key)}" data-i="${i}"`;
+ const tools=editing?`<div class="etools">${key.startsWith("head:")?"":dragB()}${gearB(`box|${key}|${i}`)}${minusB('data-act="bdel"',"b"+key+i)}</div>`:"";
+ const at=`data-key="${esc(key)}" data-i="${i}" data-di="${i}"`;
  if(b.kind==="text")return `<article class="tblock" ${at}>${tools}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p>${EZ(bp+"text",bp+"textZh",{ph:"Type your text here…",ml:1})}</p>`:""}${reqHtml(b)}</article>`;
  return `<article class="rnd${shapeCls(b)}${sizeCls(b.size)}" ${at}>${tools}${mediaHtml(b.media,key+":"+i)}
   ${home&&(editing||b.label)?`<div class="lab">${EZ(bp+"label",bp+"labelZh",{ph:"Sub-title"})}</div>`:""}${editing||b.title?`<h3>${EZ(bp+"title",bp+"titleZh",{ph:"Title"})}</h3>`:""}${editing||b.text?`<p class="txt">${EZ(bp+"text",bp+"textZh",{ph:"Text",ml:1})}</p>`:""}
   ${reqHtml(b)}${home&&b.to?`<a class="more" href="#${esc(linkTo(b.to))}"${BK("btn|more")}>${editing?EZ(bp+"more",bp+"moreZh",{ph:"See more →"}):t(b.more||"See more →",b.moreZh)}</a>`:""}</article>`}
 function blocksHtml(key){const L=listFor(key)||[];
- return `<div class="rounds" data-list="${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box at the beginning","atstart"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
+ return `<div class="rounds${ALN(key==="home"?DATA.homeAlign:(findPath(key)||[]).slice(-1)[0]?.align)}" data-list="${esc(key)}" data-dnd="b|${esc(key)}">${editing&&L.length?plusB(`data-pop="addstart|${esc(key)}"`,"Add a box at the beginning","atstart"):""}${L.map((b,i)=>blockHtml(b,i,key)).join("")}${editing?plusB(`data-pop="add|${esc(key)}"`,"Add a box","big"):""}</div>`}
 
 /* ---------- settings bubbles (⚙) ---------- */
 const SHAPES=[["circle","Circle",'<i style="width:18px;height:18px;border-radius:50%"></i>'],["rounded","Rounded square",'<i style="width:18px;height:18px;border-radius:5px"></i>'],["wide","Wide (video)",'<i style="width:24px;height:14px;border-radius:4px"></i>'],["tall","Tall",'<i style="width:14px;height:20px;border-radius:4px"></i>']];
@@ -837,10 +857,12 @@ function popHtml(sig){const [kind,a,b]=sig.split("|");
   ${p.type==="inbox"?"":`<div class="poprow"><span class="plab">Tile shape</span><div class="segs">${SHAPES.map(([v,l,ic])=>`<button type="button" class="seg${(p.tileShape||"circle")===v?" on":""}" data-pact="pshape" data-v="${v}" title="${l}" aria-label="${l}">${ic}</button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Tile size</span>${sizeSegs(p.tileSize,"data-pact")}</div>
   <div class="poprow"><span class="plab">Tile picture</span><div class="popbtns"><button type="button" class="mini" data-pact="cover">Choose…</button>${p.img?`<button type="button" class="mini" data-pact="nocover">Remove</button>`:""}</div></div>
+  <div class="poprow"><span class="plab">Line up tiles &amp; boxes</span><div class="segs">${[["left","Left","M4 6h10M4 12h16M4 18h8"],["center","Center","M7 6h10M4 12h16M8 18h8"],["right","Right","M10 6h10M4 12h16M12 18h8"]].map(([v,l,d])=>`<button type="button" class="seg${(p.align||"center")===v?" on":""}" data-pact="palign" data-v="${v}" title="${l}" aria-label="${l}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="${d}"/></svg></button>`).join("")}</div></div>
   <label class="poprow chk"><input type="checkbox" data-chk="P|${esc(a)}|words" ${p.words?"checked":""}> Show the “Words of the Week” list</label>
   <div class="poprow"><button type="button" class="mini" data-pact="addsub">+ Add a page inside this page</button></div>`}
   <div class="poprow us"><button type="button" class="mini" data-act="undo" ${HIST.length?"":"disabled"}>↶ Undo</button><button type="button" class="mini sv" data-act="psave">✓ Save</button></div>`}
  if(kind==="hero")return `<div class="pophd">Overview settings</div>
+  <div class="poprow"><span class="plab">Line up the boxes</span><div class="segs">${[["left","Left","M4 6h10M4 12h16M4 18h8"],["center","Center","M7 6h10M4 12h16M8 18h8"],["right","Right","M10 6h10M4 12h16M12 18h8"]].map(([v,l,d])=>`<button type="button" class="seg${(DATA.homeAlign||"center")===v?" on":""}" data-act="halign" data-v="${v}" title="${l}" aria-label="${l}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="${d}"/></svg></button>`).join("")}</div></div>
   <div class="poprow"><span class="plab">Background picture</span><div class="popbtns"><button type="button" class="mini" data-act="heroimg">Change…</button>${DATA.heroImg?`<button type="button" class="mini" data-act="heroimg0">Original</button>`:""}</div></div>
   <div class="poprow"><span class="plab">School logo</span><div class="popbtns"><button type="button" class="mini" data-act="logoimg">Change…</button>${DATA.logo?`<button type="button" class="mini" data-act="logoimg0">Original</button>`:""}</div></div>
   <div class="poprow"><span class="plab">Yellow button 1 goes to</span><select class="hin" data-sel="hero.b1To">${pageOptions(DATA.hero.b1To)}</select></div>
@@ -925,7 +947,7 @@ const CAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 const tileImg=p=>{const has=p.img&&imgOk(p.img),ed=editing?` data-pact="cover" data-page="${esc(p.id)}" role="button" tabindex="0" title="Change picture"`:"";
  return `<div class="pic${has?"":" ico"}${editing?" chg":""}"${ed}>${has?`<img src="${esc(p.img)}" alt="">`:(TICON[p.id]||TICON.def)}${editing?`<span class="chgo">${CAM}<b>${has?"Change picture":"Add picture"}</b></span>`:""}</div>`};
 function tilesHtml(p){if(!p.children.length)return "";
- return `<div class="rounds tilesr">${p.children.map(c=>`<a class="rnd${({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[c.tileShape]||""}${sizeCls(c.tileSize)}" href="#${esc(c.id)}">${editing?`<div class="etools">${gearB("page|"+c.id)}${minusB(`data-pact="pdel" data-page="${esc(c.id)}"`,"p"+c.id)}</div>`:""}${tileImg(c)}<h3>${EZ("P|"+c.id+"|name","P|"+c.id+"|zh",{ph:"Page name"})}</h3>${editing||c.desc?`<p class="txt">${EZ("P|"+c.id+"|desc","P|"+c.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}<span class="more"${BK("btn|viewpage")}>${UE("viewPage")}</span></a>`).join("")}${editing?plusB(`data-pact="addsub" data-page="${esc(p.id)}"`,"Add a page inside","big"):""}</div>`}
+ return `<div class="rounds tilesr${ALN(p.align)}" data-dnd="p|${esc(p.id)}">${p.children.map((c,ci)=>`<a data-di="${ci}" class="rnd${({rounded:" shp-rounded",wide:" shp-wide",tall:" shp-tall"})[c.tileShape]||""}${sizeCls(c.tileSize)}" href="#${esc(c.id)}">${editing?`<div class="etools">${dragB()}${gearB("page|"+c.id)}${minusB(`data-pact="pdel" data-page="${esc(c.id)}"`,"p"+c.id)}</div>`:""}${tileImg(c)}<h3>${EZ("P|"+c.id+"|name","P|"+c.id+"|zh",{ph:"Page name"})}</h3>${editing||c.desc?`<p class="txt">${EZ("P|"+c.id+"|desc","P|"+c.id+"|descZh",{ph:"Short description (optional)",ml:1})}</p>`:""}<span class="more"${BK("btn|viewpage")}>${UE("viewPage")}</span></a>`).join("")}${editing?plusB(`data-pact="addsub" data-page="${esc(p.id)}"`,"Add a page inside","big"):""}</div>`}
 function headHtml(path){const p=path[path.length-1],par=path[path.length-2];
  const pills=path.length<3||(!editing&&par.children.length<2)?"":par.hidePills?(editing?`<div class="pillrow"><button type="button" class="mini" data-act="pillshow" data-page="${esc(par.id)}">+ Show the page buttons here</button></div>`:""):`<nav class="pillrow" aria-label="More pages">${par.children.map(c=>`<span class="pillw"><a href="#${esc(c.id)}" class="${c===p?"on":""}"${BK("tab|"+c.id)}>${t(c.name||"New page",c.zh)}</a>${editing?`<span class="pillt"><button type="button" class="pillg" data-pop="page|${esc(c.id)}" title="Settings" aria-label="Settings for this page">${GEAR}</button><button type="button" class="pillx${armed==="p"+c.id?" armed":""}" data-pact="pdel" data-page="${esc(c.id)}" title="Delete this page" aria-label="Delete this page">${armed==="p"+c.id?"Delete?":"×"}</button></span>`:""}</span>`).join("")}${editing?`<button type="button" class="plus sm" data-pact="addsub" data-page="${esc(par.id)}" title="Add a page here" aria-label="Add a page here">+</button><button type="button" class="eb minus pillhide" data-act="pillhide" data-page="${esc(par.id)}" title="Hide this row of buttons" aria-label="Hide this row of buttons">−</button>`:""}</nav>`;
  const back=editing?`<div class="back" role="button" tabindex="0" data-up="${par?esc(par.id):"overview"}"${BK("btn|back")}>${BACK}${UE("back")}</div>`:`<button class="back" type="button" data-up="${par?esc(par.id):"overview"}" aria-label="Go back"${BK("btn|back")}>${BACK}${U("back")}</button>`;
@@ -1005,6 +1027,30 @@ document.addEventListener("focusin",e=>{if(!editing)return;const el=e.target.clo
 document.addEventListener("focusout",e=>{setTimeout(()=>{const a=document.activeElement;if(!(a&&a.closest&&(a.closest(".ce")||a.closest("#fmt"))))hideFmt()},150)});
 window.addEventListener("scroll",()=>{if(fmtEl&&!$("#fmt").hidden)showFmt(fmtEl)},{passive:true});
 
+/* ---------- drag to move ---------- */
+let drag=null;
+function dragMove(e){if(!drag)return;const d=drag;d.ghost.style.left=(e.clientX-d.dx)+"px";d.ghost.style.top=(e.clientY-d.dy)+"px";
+ if(e.clientY<90)scrollBy(0,-14);else if(e.clientY>innerHeight-110)scrollBy(0,14);
+ let best=null,bd=1e9;for(const it of d.items){if(it===d.item)continue;const r=it.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const dist=Math.hypot((e.clientX-cx)*.8,(e.clientY-cy)*1.2);if(dist<bd){bd=dist;best={it,r,cx,cy}}}
+ if(!best){d.to=null;d.line.hidden=true;d.hline.hidden=true;return}
+ const after=e.clientX>best.cx,gap=16;const x=after?best.r.right+gap:best.r.left-gap;
+ Object.assign(d.line.style,{left:(x-2)+"px",top:best.r.top+"px",height:best.r.height+"px"});d.line.hidden=false;
+ const cr=d.cont.getBoundingClientRect();Object.assign(d.hline.style,{left:cr.left+"px",width:cr.width+"px",top:(best.r.top+Math.min(best.r.height,best.r.width)/2)+"px"});d.hline.hidden=false;
+ let to=+best.it.dataset.di+(after?1:0);if(d.from<to)to--;d.to=to}
+function dragEnd(){if(!drag)return;const d=drag;drag=null;d.ghost.remove();d.line.remove();d.hline.remove();d.vline.remove();d.item.classList.remove("dsrc");d.cont.classList.remove("dcont");document.body.classList.remove("dragging");
+ if(d.to==null||d.to===d.from)return;const [kind,id]=d.cont.dataset.dnd.split("|");
+ const arr=kind==="b"?listFor(id):(findPath(id)||[]).slice(-1)[0]?.children;if(!arr)return;snap();arr.splice(d.to,0,arr.splice(d.from,1)[0]);closePop();saveDraft();render(true);msg("Moved. Click Publish when you’re ready.")}
+document.addEventListener("pointerdown",e=>{if(!editing)return;const h=e.target.closest("[data-drag]");if(!h)return;e.preventDefault();e.stopPropagation();
+ const item=h.closest("[data-di]"),cont=item&&item.closest("[data-dnd]");if(!cont)return;closePop();hideFmt();
+ const r=item.getBoundingClientRect(),ghost=item.cloneNode(true);ghost.querySelectorAll(".etools").forEach(t=>t.remove());ghost.classList.add("dghost");Object.assign(ghost.style,{width:r.width+"px",left:r.left+"px",top:r.top+"px"});document.body.appendChild(ghost);
+ const mk=c=>{const el=document.createElement("div");el.className=c;el.hidden=true;document.body.appendChild(el);return el};
+ const cr=cont.getBoundingClientRect(),vline=mk("dvline");Object.assign(vline.style,{left:(cr.left+cr.width/2)+"px",top:cr.top+"px",height:cr.height+"px"});vline.hidden=false;
+ item.classList.add("dsrc");cont.classList.add("dcont");document.body.classList.add("dragging");
+ drag={item,cont,items:[...cont.querySelectorAll(":scope>[data-di]")],ghost,line:mk("dline"),hline:mk("dhline"),vline,dx:e.clientX-r.left,dy:e.clientY-r.top,from:+item.dataset.di,to:null};dragMove(e)});
+document.addEventListener("pointermove",e=>{if(drag){e.preventDefault();dragMove(e)}},{passive:false});
+document.addEventListener("pointerup",dragEnd);document.addEventListener("pointercancel",dragEnd);
+document.addEventListener("keydown",e=>{if(drag&&e.key==="Escape"){drag.to=null;dragEnd()}});
+
 /* ---------- editing actions ---------- */
 let gateEd=false;
 window.__weh={get data(){return DATA},get pop(){return popState}};
@@ -1031,6 +1077,7 @@ document.addEventListener("click",e=>{
   if(act==="nocover"){p.img="";saveDraft();render(true)}
   if(act==="pshape"){p.tileShape=pa.dataset.v;saveDraft();render(true)}
   if(act==="psize"){p.tileSize=pa.dataset.v;saveDraft();render(true)}
+  if(act==="palign"){p.align=pa.dataset.v==="center"?undefined:pa.dataset.v;saveDraft();render(true)}
   if(act==="pdel"){if(!arm("p"+p.id,pa,"Delete?"))return;closePop();snap();sib.splice(ix,1);saveDraft();const par=path[path.length-2];if(p.id===curId||path.some(x=>x.id===curId)){location.hash="#"+(par?par.id:"overview")}render(true)}
   return}
  const ba=e.target.closest("[data-act]");if(!ba||ba.disabled)return;const act=ba.dataset.act;
@@ -1043,6 +1090,7 @@ document.addEventListener("click",e=>{
  if(act==="heroimg"||act==="logoimg"){pick={type:act};const pk=$("#picker");pk.accept="image/*";pk.multiple=false;pk.value="";pk.click();return}
  if(act==="heroimg0"){DATA.heroImg="";saveDraft();render(true);return}
  if(act==="pillhide"||act==="pillshow"){const pa2=findPath(ba.dataset.page);if(pa2){pa2[pa2.length-1].hidePills=act==="pillhide";saveDraft();render(true);msg(act==="pillhide"?"Page buttons hidden. Click “+ Show the page buttons here” to bring them back.":"Page buttons are back.")}return}
+ if(act==="halign"){DATA.homeAlign=ba.dataset.v==="center"?undefined:ba.dataset.v;saveDraft();render(true);return}
  if(act==="lookopen"){$("#ebmenu").hidden=true;popState="look";renderPop();return}
  if(act==="bgimg"){pick={type:"bgimg"};const pk=$("#picker");pk.accept="image/*";pk.multiple=false;pk.value="";pk.click();return}
  if(act==="bgimg0"){DATA.theme.bgImg="";applyTheme();saveDraft();renderPop();return}
